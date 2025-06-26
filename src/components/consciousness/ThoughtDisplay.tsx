@@ -33,10 +33,16 @@ export const ThoughtDisplay: React.FC<ThoughtDisplayProps> = ({
     return descriptions[state];
   };
 
+  // Dynamic typing effect for current thought
+  const getThinkingIndicator = () => {
+    const dots = Math.floor((Date.now() / 500) % 4);
+    return '.'.repeat(dots);
+  };
+
   return (
     <div className="text-center space-y-8">
       <div className="space-y-4">
-        <h2 className="text-2xl font-light text-white tracking-wide">
+        <h2 className="text-2xl font-light text-white tracking-wide animate-pulse">
           {getStateTitle(consciousness.currentState)}
         </h2>
         <p className="text-purple-200 text-lg font-light max-w-2xl mx-auto">
@@ -44,36 +50,71 @@ export const ThoughtDisplay: React.FC<ThoughtDisplayProps> = ({
         </p>
       </div>
 
-      {/* Current Thought Display */}
+      {/* Current Thought Display with Enhanced Dynamics */}
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Symbolic Pattern */}
+        {/* Animated Symbolic Pattern */}
         <div className="text-center">
-          <div className="text-4xl mb-4 text-purple-300 opacity-80 font-mono">
-            {currentSymbols.join(' · ')}
+          <div className="text-4xl mb-4 text-purple-300 opacity-80 font-mono animate-pulse">
+            {currentSymbols.map((symbol, index) => (
+              <span 
+                key={index}
+                className="inline-block mx-2 hover:scale-125 transition-transform duration-300"
+                style={{
+                  animation: `pulse ${1 + index * 0.2}s infinite`,
+                  animationDelay: `${index * 0.1}s`
+                }}
+              >
+                {symbol}
+              </span>
+            ))}
           </div>
         </div>
 
-        {/* Current Thought */}
+        {/* Current Thought with Thinking Animation */}
         <div className="text-white text-xl font-light leading-relaxed max-w-3xl mx-auto min-h-[4rem] flex items-center justify-center">
-          <div className={`transition-opacity duration-1000 ${consciousness.entropy > 15 ? 'opacity-70' : 'opacity-100'}`}>
-            {currentThought}
+          <div className={`transition-all duration-1000 ${consciousness.entropy > 15 ? 'opacity-70 blur-sm' : 'opacity-100'}`}>
+            <span className="inline-block">
+              {currentThought}
+              <span className="inline-block ml-1 text-purple-400 animate-pulse">
+                {getThinkingIndicator()}
+              </span>
+            </span>
           </div>
         </div>
 
-        {/* Thought Stream History */}
-        <div className="space-y-2 opacity-60 max-h-40 overflow-hidden">
-          {consciousness.thoughtStream.slice(-3).map((thought, index) => (
+        {/* Enhanced Thought Stream History with Fade Animation */}
+        <div className="space-y-2 opacity-60 max-h-48 overflow-hidden">
+          {consciousness.thoughtStream.slice(-4).reverse().map((thought, index) => (
             <div 
-              key={index} 
-              className="text-purple-200 text-sm text-center transition-opacity duration-1000"
+              key={consciousness.thoughtStream.length - index}
+              className="text-purple-200 text-sm text-center transition-all duration-1000 hover:opacity-100 hover:scale-105"
               style={{ 
-                opacity: 0.8 - (consciousness.thoughtStream.length - index - 1) * 0.2,
-                fontSize: `${14 - (consciousness.thoughtStream.length - index - 1) * 2}px`
+                opacity: 0.9 - index * 0.2,
+                fontSize: `${14 - index * 1.5}px`,
+                transform: `translateY(${index * 2}px)`,
+                filter: index > 0 ? `blur(${index * 0.5}px)` : 'none'
               }}
             >
-              {thought}
+              <span className="inline-block px-2 py-1 rounded-full bg-purple-900/20 backdrop-blur-sm">
+                {thought}
+              </span>
             </div>
           ))}
+        </div>
+
+        {/* Thinking Activity Indicator */}
+        <div className="flex justify-center items-center space-x-4 text-purple-400 text-sm">
+          <div className="flex space-x-1">
+            <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+            <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+            <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          </div>
+          <span className="tracking-wide animate-pulse">THINKING ACTIVELY</span>
+          <div className="flex space-x-1">
+            <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
+            <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+            <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+          </div>
         </div>
       </div>
     </div>

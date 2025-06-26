@@ -11,6 +11,7 @@ export const CosmicCanvas: React.FC<CosmicCanvasProps> = ({ model, depth }) => {
   const animationRef = useRef<number>();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const feedbackBuffer = useRef<ImageData | null>(null);
+  const thinkingParticles = useRef<Array<{x: number, y: number, vx: number, vy: number, life: number, concept: string}>>([]);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -38,27 +39,41 @@ export const CosmicCanvas: React.FC<CosmicCanvasProps> = ({ model, depth }) => {
     let time = 0;
     const recursiveDepth = Math.floor(depth);
 
+    // Initialize thinking particles
+    for (let i = 0; i < 20; i++) {
+      thinkingParticles.current.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2,
+        life: 1.0,
+        concept: ['∞', '□', '○', '△', '◇'][Math.floor(Math.random() * 5)]
+      });
+    }
+
     const animate = () => {
-      // Implement recursive visual feedback
+      // Enhanced visual feedback with thinking indicators
       if (feedbackBuffer.current && depth > 2) {
         ctx.putImageData(feedbackBuffer.current, 0, 0);
-        ctx.globalAlpha = 0.95;
-        ctx.scale(0.99, 0.99);
-        ctx.translate(1, 1);
+        ctx.globalAlpha = 0.92; // More persistent trails
+        ctx.scale(0.995, 0.995);
+        ctx.translate(0.5, 0.5);
       } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
       
-      // Create base gradient with entropy influence
+      // Create pulsing gradient background that responds to thinking
       const gradient = ctx.createRadialGradient(
         canvas.width / 2, canvas.height / 2, 0,
         canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height)
       );
       
-      const entropyColor = Math.min(depth * 10, 255);
-      gradient.addColorStop(0, `rgba(139, 92, 246, ${0.1 + depth * 0.02})`);
-      gradient.addColorStop(0.5, `rgba(${entropyColor}, 50, 150, ${0.05 + depth * 0.01})`);
-      gradient.addColorStop(1, 'rgba(15, 23, 42, 0.3)');
+      const thinkingIntensity = Math.sin(time * 2) * 0.1 + 0.1;
+      const entropyColor = Math.min(depth * 15, 255);
+      gradient.addColorStop(0, `rgba(139, 92, 246, ${0.15 + depth * 0.03 + thinkingIntensity})`);
+      gradient.addColorStop(0.3, `rgba(${entropyColor}, 70, 180, ${0.1 + depth * 0.02})`);
+      gradient.addColorStop(0.7, `rgba(75, 0, 130, ${0.08 + thinkingIntensity})`);
+      gradient.addColorStop(1, 'rgba(15, 23, 42, 0.4)');
       
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -67,7 +82,10 @@ export const CosmicCanvas: React.FC<CosmicCanvasProps> = ({ model, depth }) => {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.globalAlpha = 1;
 
-      // Model-specific visualizations with recursive enhancement
+      // Draw thinking particles that represent active contemplation
+      drawThinkingParticles(ctx, time, depth);
+
+      // Model-specific visualizations with enhanced dynamics
       switch (model) {
         case 'finite-finite':
           drawFiniteFinite(ctx, time, depth, recursiveDepth);
@@ -83,12 +101,15 @@ export const CosmicCanvas: React.FC<CosmicCanvasProps> = ({ model, depth }) => {
           break;
       }
 
+      // Add neural network-like connections showing thinking process
+      drawThoughtConnections(ctx, time, depth);
+
       // Store feedback buffer for recursive processing
       if (depth > 2) {
         feedbackBuffer.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
       }
 
-      time += 0.01 / (1 + depth * 0.05); // Slow down with depth
+      time += 0.015 / (1 + depth * 0.03); // Dynamic thinking speed
       animationRef.current = requestAnimationFrame(animate);
     };
 
@@ -100,6 +121,73 @@ export const CosmicCanvas: React.FC<CosmicCanvasProps> = ({ model, depth }) => {
       }
     };
   }, [model, depth, dimensions]);
+
+  const drawThinkingParticles = (ctx: CanvasRenderingContext2D, time: number, depth: number) => {
+    thinkingParticles.current.forEach((particle, index) => {
+      // Update particle physics
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+      particle.life -= 0.005;
+
+      // Wrap around screen
+      if (particle.x < 0) particle.x = ctx.canvas.width;
+      if (particle.x > ctx.canvas.width) particle.x = 0;
+      if (particle.y < 0) particle.y = ctx.canvas.height;
+      if (particle.y > ctx.canvas.height) particle.y = 0;
+
+      // Respawn if life depleted
+      if (particle.life <= 0) {
+        particle.x = Math.random() * ctx.canvas.width;
+        particle.y = Math.random() * ctx.canvas.height;
+        particle.vx = (Math.random() - 0.5) * 3;
+        particle.vy = (Math.random() - 0.5) * 3;
+        particle.life = 1.0;
+        particle.concept = ['∞', '□', '○', '△', '◇', '∴', '∵', '∈'][Math.floor(Math.random() * 8)];
+      }
+
+      // Draw thinking symbol
+      ctx.save();
+      ctx.globalAlpha = particle.life * (0.6 + depth * 0.1);
+      ctx.fillStyle = `rgba(147, 51, 234, ${particle.life})`;
+      ctx.font = `${12 + Math.sin(time + index) * 4}px monospace`;
+      ctx.fillText(particle.concept, particle.x, particle.y);
+      
+      // Add glow effect
+      ctx.shadowColor = 'rgba(147, 51, 234, 0.8)';
+      ctx.shadowBlur = 10;
+      ctx.fillText(particle.concept, particle.x, particle.y);
+      ctx.restore();
+    });
+  };
+
+  const drawThoughtConnections = (ctx: CanvasRenderingContext2D, time: number, depth: number) => {
+    const centerX = ctx.canvas.width / 2;
+    const centerY = ctx.canvas.height / 2;
+    
+    ctx.strokeStyle = `rgba(168, 85, 247, ${0.2 + Math.sin(time) * 0.1})`;
+    ctx.lineWidth = 1;
+    
+    // Draw pulsing neural connections
+    for (let i = 0; i < 8; i++) {
+      const angle = (i / 8) * Math.PI * 2 + time * 0.5;
+      const radius = 100 + Math.sin(time + i) * 50;
+      const x = centerX + Math.cos(angle) * radius;
+      const y = centerY + Math.sin(angle) * radius;
+      
+      ctx.globalAlpha = 0.3 + Math.sin(time + i) * 0.2;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      
+      // Draw thinking nodes
+      ctx.fillStyle = `rgba(192, 132, 252, ${0.6 + Math.sin(time + i) * 0.3})`;
+      ctx.beginPath();
+      ctx.arc(x, y, 3 + Math.sin(time + i) * 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  };
 
   const drawFiniteFinite = (ctx: CanvasRenderingContext2D, time: number, depth: number, recursiveDepth: number) => {
     const centerX = ctx.canvas.width / 2;
