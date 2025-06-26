@@ -11,3 +11,5 @@ export interface ConsciousnessState {
 }
 
 export type CosmicState = 'finite-finite' | 'finite-infinite' | 'infinite-finite' | 'infinite-infinite';
+
+export type UniverseModel = CosmicState;

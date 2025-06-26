@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CosmicState } from '../types/consciousness';
 
+export { CosmicState };
+
 interface CosmologicalAttractor {
   state: CosmicState;
   entropy: number;
