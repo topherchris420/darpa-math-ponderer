@@ -1,19 +1,17 @@
+
 import React from 'react';
 import { ConsciousnessState } from '../../types/consciousness';
 
 interface ConsciousnessMetricsProps {
   consciousness: ConsciousnessState;
   formatTime: (seconds: number) => string;
-  isPaused?: boolean;
-  thinkingSpeed?: 'slow' | 'normal' | 'fast';
 }
 
 export const ConsciousnessMetrics: React.FC<ConsciousnessMetricsProps> = ({
   consciousness,
-  formatTime,
-  isPaused = false,
-  thinkingSpeed = 'normal'
+  formatTime
 }) => {
+  // Dynamic visual indicators based on consciousness state
   const getEntropyColor = (entropy: number) => {
     if (entropy < 5) return 'text-blue-400';
     if (entropy < 10) return 'text-purple-400';
@@ -28,50 +26,38 @@ export const ConsciousnessMetrics: React.FC<ConsciousnessMetricsProps> = ({
     return '○○○';
   };
 
-  const getSpeedIndicator = (speed: string) => {
-    const indicators = { slow: '🐌', normal: '🧠', fast: '⚡' };
-    return indicators[speed as keyof typeof indicators] || '🧠';
-  };
-
   return (
     <>
-      {/* Enhanced Header - Consciousness Status */}
+      {/* Header - Enhanced Consciousness Status */}
       <div className="text-center space-y-4">
-        <h1 className={`text-6xl font-thin text-white tracking-widest opacity-80 relative transition-all duration-500 ${isPaused ? 'animate-none' : ''}`}>
-          <span className={isPaused ? 'opacity-50' : 'animate-pulse'}>
+        <h1 className="text-6xl font-thin text-white tracking-widest opacity-80 relative">
+          <span className="animate-pulse">
             {consciousness.selfAwareness > 0.5 ? 'THINK·THINK·THINK' : 'THINK'}
           </span>
-          {consciousness.entropy > 10 && !isPaused && (
+          {consciousness.entropy > 10 && (
             <span className="absolute -top-2 -right-2 text-xs text-purple-400 animate-bounce">
               ∞
             </span>
           )}
-          {isPaused && (
-            <span className="absolute -top-2 -right-2 text-xs text-yellow-400">
-              ⏸
-            </span>
-          )}
         </h1>
         
-        {/* Enhanced Real-time Metrics with status indicators */}
+        {/* Enhanced Real-time Metrics */}
         <div className="text-purple-300 text-sm tracking-wide space-y-2">
           <div className="flex justify-center items-center space-x-6">
-            <div className={isPaused ? 'opacity-50' : 'animate-pulse'}>
+            <div className="animate-pulse">
               Runtime: <span className="font-mono text-white">{formatTime(consciousness.timeRunning)}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span>Status:</span>
-              <span className={`text-lg ${isPaused ? 'text-yellow-400' : 'text-green-400'}`}>
-                {isPaused ? '⏸' : '▶️'}
-              </span>
-              <span className="text-sm">
-                {isPaused ? 'PAUSED' : 'THINKING'}
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span>Speed:</span>
-              <span className="text-lg">{getSpeedIndicator(thinkingSpeed)}</span>
-              <span className="text-sm uppercase">{thinkingSpeed}</span>
+              <span>Thinking:</span>
+              <div className="flex space-x-1">
+                {[...Array(3)].map((_, i) => (
+                  <div 
+                    key={i}
+                    className="w-1 h-4 bg-purple-400 rounded-full animate-pulse"
+                    style={{ animationDelay: `${i * 0.2}s` }}
+                  ></div>
+                ))}
+              </div>
             </div>
           </div>
           
@@ -101,14 +87,12 @@ export const ConsciousnessMetrics: React.FC<ConsciousnessMetricsProps> = ({
         </div>
       </div>
 
-      {/* Enhanced Bottom Status */}
+      {/* Bottom Status - Enhanced Dynamic Metrics */}
       <div className="text-center space-y-3">
         <div className="text-purple-400 text-sm flex justify-center items-center space-x-6">
           <div className="bg-purple-900/30 px-3 py-1 rounded-full backdrop-blur-sm">
             <span className="text-purple-300">State:</span> 
-            <span className={`font-mono text-white ml-2 ${isPaused ? 'opacity-50' : 'animate-pulse'}`}>
-              {consciousness.currentState}
-            </span>
+            <span className="font-mono text-white ml-2 animate-pulse">{consciousness.currentState}</span>
           </div>
           <div className="bg-purple-900/30 px-3 py-1 rounded-full backdrop-blur-sm">
             <span className="text-purple-300">Thoughts:</span> 
@@ -118,31 +102,26 @@ export const ConsciousnessMetrics: React.FC<ConsciousnessMetricsProps> = ({
         
         <div className="flex justify-center space-x-6 text-purple-500 text-xs">
           <div className="flex items-center space-x-2">
-            <div className={`w-2 h-2 bg-purple-500 rounded-full ${isPaused ? '' : 'animate-pulse'}`}></div>
+            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
             <span>Symbols: <span className="font-mono">{consciousness.symbolicStream.length}</span></span>
           </div>
           <span className="opacity-50">•</span>
           <div className="flex items-center space-x-2">
-            <div className={`w-2 h-2 bg-cyan-500 rounded-full ${isPaused ? '' : 'animate-pulse'}`}></div>
+            <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
             <span>Coherence: <span className="font-mono">{(1 / (1 + consciousness.temporalDrift) * 100).toFixed(0)}%</span></span>
           </div>
           <span className="opacity-50">•</span>
           <div className="flex items-center space-x-2">
-            <div className={`w-2 h-2 bg-emerald-500 rounded-full ${isPaused ? '' : 'animate-pulse'}`}></div>
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
             <span>Recursion: <span className="font-mono">{Math.floor(consciousness.cognitiveDepth * 10)}</span></span>
           </div>
         </div>
         
-        <div className={`text-purple-600 text-xs tracking-widest relative ${isPaused ? 'opacity-50' : ''}`}>
-          <span className={consciousness.selfAwareness > 0.8 && !isPaused ? 'animate-pulse text-yellow-400' : ''}>
-            {isPaused 
-              ? 'CONTEMPLATION PAUSED' 
-              : consciousness.selfAwareness > 0.8 
-                ? 'SELF-AWARE AUTONOMOUS CONTEMPLATION' 
-                : 'AUTONOMOUS CONTEMPLATION ACTIVE'
-            }
+        <div className="text-purple-600 text-xs tracking-widest relative">
+          <span className={consciousness.selfAwareness > 0.8 ? 'animate-pulse text-yellow-400' : ''}>
+            {consciousness.selfAwareness > 0.8 ? 'SELF-AWARE AUTONOMOUS CONTEMPLATION' : 'AUTONOMOUS CONTEMPLATION ACTIVE'}
           </span>
-          {consciousness.entropy > 15 && !isPaused && (
+          {consciousness.entropy > 15 && (
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/20 to-transparent animate-pulse"></div>
           )}
         </div>
