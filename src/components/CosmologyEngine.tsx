@@ -26,45 +26,45 @@ export const CosmologyEngine: React.FC<CosmologyEngineProps> = ({
     semanticDensity: 1.0,
     cognitiveWeight: 1.0,
     transitionProbabilities: {
-      'finite-finite': 0.4,
-      'finite-infinite': 0.3,
-      'infinite-finite': 0.2,
-      'infinite-infinite': 0.1
+      'finite-finite': 0.25,
+      'finite-infinite': 0.25,
+      'infinite-finite': 0.25,
+      'infinite-infinite': 0.25
     }
   });
 
   const entropyAccumulator = useRef(0);
   const thoughtHistory = useRef<string[]>([]);
-  const transitionThreshold = useRef(100);
+  const transitionThreshold = useRef(15); // Much lower threshold for faster transitions
 
-  // Self-modifying entropy calculation
+  // Accelerated entropy calculation for rapid state changes
   useEffect(() => {
     const interval = setInterval(() => {
       // Calculate entropy based on thought complexity and repetition
-      const thoughtComplexity = thoughtHistory.current.length * 0.1;
+      const thoughtComplexity = thoughtHistory.current.length * 0.2;
       const repetitionPenalty = calculateRepetitionPenalty();
-      const semanticDrift = Math.sin(Date.now() * 0.0001) * 0.5;
+      const semanticDrift = Math.sin(Date.now() * 0.001) * 0.8; // Faster drift
       
       const newEntropy = currentAttractor.entropy + thoughtComplexity - repetitionPenalty + semanticDrift;
-      entropyAccumulator.current += newEntropy * 0.01;
+      entropyAccumulator.current += newEntropy * 0.05; // Faster accumulation
 
-      // State transition based on entropy threshold
+      // More frequent state transitions with lower threshold
       if (entropyAccumulator.current > transitionThreshold.current) {
         initiateStateTransition();
         entropyAccumulator.current = 0;
-        // Self-modify threshold for next transition
-        transitionThreshold.current = 80 + Math.random() * 60;
+        // Keep threshold low for continuous oscillation
+        transitionThreshold.current = 10 + Math.random() * 15;
       }
 
       setCurrentAttractor(prev => ({
         ...prev,
         entropy: newEntropy,
-        semanticDensity: Math.max(0.1, prev.semanticDensity + (Math.random() - 0.5) * 0.05),
-        cognitiveWeight: Math.max(0.5, prev.cognitiveWeight + (Math.random() - 0.5) * 0.02)
+        semanticDensity: Math.max(0.1, prev.semanticDensity + (Math.random() - 0.5) * 0.1),
+        cognitiveWeight: Math.max(0.5, prev.cognitiveWeight + (Math.random() - 0.5) * 0.05)
       }));
 
       onEntropyChange(newEntropy);
-    }, 1000);
+    }, 500); // Faster update cycle
 
     return () => clearInterval(interval);
   }, [currentAttractor.entropy, onEntropyChange]);
@@ -77,29 +77,41 @@ export const CosmologyEngine: React.FC<CosmologyEngineProps> = ({
 
   const initiateStateTransition = () => {
     const { transitionProbabilities } = currentAttractor;
+    
+    // Ensure we cycle through all states more evenly
+    const states: CosmicState[] = ['finite-finite', 'finite-infinite', 'infinite-finite', 'infinite-infinite'];
+    const currentStateIndex = states.indexOf(currentAttractor.state);
+    
+    // Bias towards the next state in sequence for more predictable oscillation
+    const biasedProbabilities = { ...transitionProbabilities };
+    const nextStateIndex = (currentStateIndex + 1) % states.length;
+    const nextState = states[nextStateIndex];
+    
+    // Increase probability of moving to next state in cycle
+    biasedProbabilities[nextState] = 0.4;
+    biasedProbabilities[currentAttractor.state] = 0.1; // Reduce staying in same state
+    
+    // Distribute remaining probability among other states
+    const otherStates = states.filter(s => s !== nextState && s !== currentAttractor.state);
+    otherStates.forEach(state => {
+      biasedProbabilities[state] = 0.25;
+    });
+
     const random = Math.random();
     let cumulativeProbability = 0;
     
-    for (const [state, probability] of Object.entries(transitionProbabilities)) {
+    for (const [state, probability] of Object.entries(biasedProbabilities)) {
       cumulativeProbability += probability;
       if (random <= cumulativeProbability) {
         const newState = state as CosmicState;
         
-        // Self-modify transition probabilities based on current state
-        const newProbabilities = { ...transitionProbabilities };
-        Object.keys(newProbabilities).forEach(key => {
-          if (key === newState) {
-            newProbabilities[key as CosmicState] *= 0.8; // Reduce self-transition
-          } else {
-            newProbabilities[key as CosmicState] *= 1.05; // Increase others
-          }
-        });
-
-        // Normalize probabilities
-        const sum = Object.values(newProbabilities).reduce((a, b) => a + b, 0);
-        Object.keys(newProbabilities).forEach(key => {
-          newProbabilities[key as CosmicState] /= sum;
-        });
+        // Keep probabilities more balanced to ensure continuous cycling
+        const newProbabilities = {
+          'finite-finite': 0.25,
+          'finite-infinite': 0.25,
+          'infinite-finite': 0.25,
+          'infinite-infinite': 0.25
+        };
 
         setCurrentAttractor(prev => ({
           ...prev,
@@ -121,9 +133,6 @@ export const CosmologyEngine: React.FC<CosmologyEngineProps> = ({
       thoughtHistory.current = thoughtHistory.current.slice(-50);
     }
   };
-
-  // Remove the useImperativeHandle - it's not needed and was causing the error
-  // The processThoughtFeedback method can be accessed through other means if needed
 
   return null; // This is a pure logic component
 };
