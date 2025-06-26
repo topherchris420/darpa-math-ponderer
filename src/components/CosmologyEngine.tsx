@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-
-export type CosmicState = 'finite-finite' | 'finite-infinite' | 'infinite-finite' | 'infinite-infinite';
+import { CosmicState } from '../types/consciousness';
 
 interface CosmologicalAttractor {
   state: CosmicState;

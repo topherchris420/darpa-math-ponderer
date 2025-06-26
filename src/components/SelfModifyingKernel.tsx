@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect, useRef } from 'react';
-import { CosmicState } from './CosmologyEngine';
+import { CosmicState } from '../types/consciousness';
 
 interface SymbolicWeight {
   concept: string;
