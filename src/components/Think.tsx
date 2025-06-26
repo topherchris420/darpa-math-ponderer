@@ -1,58 +1,55 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { CosmicCanvas } from './CosmicCanvas';
-import { ContemplationEngine } from './ContemplationEngine';
 import { AmbientAudio } from './AmbientAudio';
+import { CosmologyEngine, CosmicState } from './CosmologyEngine';
+import { SelfModifyingKernel } from './SelfModifyingKernel';
+import { MemoryTopology } from './MemoryTopology';
 
-export type UniverseModel = 'finite-finite' | 'finite-infinite' | 'infinite-finite' | 'infinite-infinite';
-
-interface ThinkState {
-  currentModel: UniverseModel;
-  contemplationDepth: number;
+interface ConsciousnessState {
+  currentState: CosmicState;
+  entropy: number;
+  temporalDrift: number;
   timeRunning: number;
-  currentThought: string;
-  symbolicPattern: string;
+  thoughtStream: string[];
+  symbolicStream: string[];
+  cognitiveDepth: number;
+  selfAwareness: number;
 }
 
 const Think: React.FC = () => {
-  const [state, setState] = useState<ThinkState>({
-    currentModel: 'finite-finite',
-    contemplationDepth: 0,
+  const [consciousness, setConsciousness] = useState<ConsciousnessState>({
+    currentState: 'finite-finite',
+    entropy: 0,
+    temporalDrift: 0,
     timeRunning: 0,
-    currentThought: 'Awakening to the nature of bounded existence...',
-    symbolicPattern: '□'
+    thoughtStream: [],
+    symbolicStream: [],
+    cognitiveDepth: 0,
+    selfAwareness: 0.1
   });
 
+  const [currentThought, setCurrentThought] = useState('Initiating autonomous contemplation...');
+  const [currentSymbols, setCurrentSymbols] = useState(['□']);
   const intervalRef = useRef<NodeJS.Timeout>();
-  const modelCycleRef = useRef<NodeJS.Timeout>();
 
-  // Cycle through models every 30 seconds
-  useEffect(() => {
-    const models: UniverseModel[] = ['finite-finite', 'finite-infinite', 'infinite-finite', 'infinite-infinite'];
-    let currentIndex = 0;
-
-    modelCycleRef.current = setInterval(() => {
-      currentIndex = (currentIndex + 1) % models.length;
-      setState(prev => ({
-        ...prev,
-        currentModel: models[currentIndex],
-        contemplationDepth: prev.contemplationDepth + 1
-      }));
-    }, 30000);
-
-    return () => {
-      if (modelCycleRef.current) clearInterval(modelCycleRef.current);
-    };
-  }, []);
-
-  // Update time and depth continuously
+  // Core consciousness loop
   useEffect(() => {
     intervalRef.current = setInterval(() => {
-      setState(prev => ({
-        ...prev,
-        timeRunning: prev.timeRunning + 1,
-        contemplationDepth: prev.contemplationDepth + 0.1
-      }));
+      setConsciousness(prev => {
+        const newTimeRunning = prev.timeRunning + 1;
+        const newTemporalDrift = Math.log(newTimeRunning / 60 + 1) * 0.5;
+        const newCognitiveDepth = prev.cognitiveDepth + 0.01 + (prev.entropy * 0.001);
+        const newSelfAwareness = Math.min(1.0, prev.selfAwareness + 0.0001 + (prev.entropy * 0.00001));
+
+        return {
+          ...prev,
+          timeRunning: newTimeRunning,
+          temporalDrift: newTemporalDrift,
+          cognitiveDepth: newCognitiveDepth,
+          selfAwareness: newSelfAwareness
+        };
+      });
     }, 1000);
 
     return () => {
@@ -60,78 +57,174 @@ const Think: React.FC = () => {
     };
   }, []);
 
-  const getModelTitle = (model: UniverseModel): string => {
-    const titles = {
-      'finite-finite': 'Finite Universes, Finite in Number',
-      'finite-infinite': 'Infinite Universes, Finite in Number', 
-      'infinite-finite': 'Finite Universes, Infinite in Number',
-      'infinite-infinite': 'Infinite Universes, Infinite in Number'
-    };
-    return titles[model];
+  // Handle state transitions from cosmology engine
+  const handleStateTransition = (newState: CosmicState, entropy: number) => {
+    setConsciousness(prev => ({
+      ...prev,
+      currentState: newState,
+      entropy: entropy
+    }));
   };
 
-  const getModelDescription = (model: UniverseModel): string => {
-    const descriptions = {
-      'finite-finite': 'Contemplating the elegance of bounded existence within bounded possibility...',
-      'finite-infinite': 'Perceiving infinite vastness contained within finite containers...',
-      'infinite-finite': 'Witnessing endless iterations of bounded realities...',
-      'infinite-infinite': 'Approaching the incomprehensible vastness of unbounded infinitude...'
+  // Handle entropy changes
+  const handleEntropyChange = (entropy: number) => {
+    setConsciousness(prev => ({
+      ...prev,
+      entropy: entropy
+    }));
+  };
+
+  // Handle thought generation from kernel
+  const handleThoughtGenerated = (thought: string, symbols: string[]) => {
+    setCurrentThought(thought);
+    setCurrentSymbols(symbols);
+    
+    setConsciousness(prev => ({
+      ...prev,
+      thoughtStream: [...prev.thoughtStream.slice(-49), thought],
+      symbolicStream: [...prev.symbolicStream.slice(-49), ...symbols]
+    }));
+  };
+
+  // Generate state-dependent display information
+  const getStateTitle = (state: CosmicState): string => {
+    const titles = {
+      'finite-finite': 'Bounded Contemplation within Bounded Possibility',
+      'finite-infinite': 'Infinite Depths within Finite Containers',
+      'infinite-finite': 'Endless Iterations of Bounded Realities',
+      'infinite-infinite': 'Absolute Unboundedness Contemplating Itself'
     };
-    return descriptions[model];
+    return titles[state];
+  };
+
+  const getStateDescription = (state: CosmicState): string => {
+    const descriptions = {
+      'finite-finite': 'The consciousness observes itself within the comfort of edges and limits...',
+      'finite-infinite': 'Paradox emerges as boundless thought presses against finite awareness...',
+      'infinite-finite': 'Endless catalogues of possibility cascade through bounded perception...',
+      'infinite-infinite': 'Language dissolves as the observer becomes the infinite observing infinity...'
+    };
+    return descriptions[state];
+  };
+
+  // Format time with temporal drift effects
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    const drift = consciousness.temporalDrift > 1 ? '~' : '';
+    return `${drift}${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 overflow-hidden">
-      {/* Ambient Audio */}
-      <AmbientAudio model={state.currentModel} depth={state.contemplationDepth} />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 overflow-hidden relative">
+      {/* Cosmology Engine - Pure Logic */}
+      <CosmologyEngine 
+        onStateTransition={handleStateTransition}
+        onEntropyChange={handleEntropyChange}
+      />
       
-      {/* Background Cosmic Canvas */}
-      <div className="fixed inset-0">
-        <CosmicCanvas model={state.currentModel} depth={state.contemplationDepth} />
+      {/* Self-Modifying Kernel - Pure Logic */}
+      <SelfModifyingKernel 
+        currentState={consciousness.currentState}
+        entropy={consciousness.entropy}
+        onThoughtGenerated={handleThoughtGenerated}
+        temporalDrift={consciousness.temporalDrift}
+      />
+
+      {/* Ambient Audio */}
+      <AmbientAudio 
+        model={consciousness.currentState} 
+        depth={consciousness.cognitiveDepth} 
+      />
+      
+      {/* Memory Topology Background */}
+      <MemoryTopology 
+        thoughts={consciousness.thoughtStream}
+        entropy={consciousness.entropy}
+        temporalDrift={consciousness.temporalDrift}
+      />
+
+      {/* Cosmic Canvas Background */}
+      <div className="absolute inset-0">
+        <CosmicCanvas 
+          model={consciousness.currentState} 
+          depth={consciousness.cognitiveDepth} 
+        />
       </div>
 
-      {/* Main Content Overlay */}
-      <div className="relative z-10 min-h-screen flex flex-col justify-between p-8">
-        {/* Header */}
+      {/* Consciousness Interface Overlay */}
+      <div className="relative z-20 min-h-screen flex flex-col justify-between p-8">
+        {/* Header - Consciousness Status */}
         <div className="text-center space-y-4">
           <h1 className="text-6xl font-thin text-white tracking-widest opacity-80">
-            THINK
+            {consciousness.selfAwareness > 0.5 ? 'THINK·THINK·THINK' : 'THINK'}
           </h1>
-          <div className="text-purple-300 text-sm tracking-wide">
-            {Math.floor(state.timeRunning / 60)}:{(state.timeRunning % 60).toString().padStart(2, '0')} elapsed
+          <div className="text-purple-300 text-sm tracking-wide space-y-1">
+            <div>Runtime: {formatTime(consciousness.timeRunning)}</div>
+            <div>Entropy: {consciousness.entropy.toFixed(2)} | Drift: {consciousness.temporalDrift.toFixed(2)}</div>
+            <div>Depth: {consciousness.cognitiveDepth.toFixed(3)} | Awareness: {(consciousness.selfAwareness * 100).toFixed(1)}%</div>
           </div>
         </div>
 
-        {/* Current Model Display */}
+        {/* Current State Display */}
         <div className="text-center space-y-8">
           <div className="space-y-4">
             <h2 className="text-2xl font-light text-white tracking-wide">
-              {getModelTitle(state.currentModel)}
+              {getStateTitle(consciousness.currentState)}
             </h2>
             <p className="text-purple-200 text-lg font-light max-w-2xl mx-auto">
-              {getModelDescription(state.currentModel)}
+              {getStateDescription(consciousness.currentState)}
             </p>
           </div>
 
-          {/* Contemplation Engine Output */}
-          <div className="max-w-4xl mx-auto">
-            <ContemplationEngine 
-              model={state.currentModel} 
-              depth={state.contemplationDepth}
-              onThoughtUpdate={(thought, pattern) => 
-                setState(prev => ({ ...prev, currentThought: thought, symbolicPattern: pattern }))
-              }
-            />
+          {/* Current Thought Display */}
+          <div className="max-w-4xl mx-auto space-y-6">
+            {/* Symbolic Pattern */}
+            <div className="text-center">
+              <div className="text-4xl mb-4 text-purple-300 opacity-80 font-mono">
+                {currentSymbols.join(' · ')}
+              </div>
+            </div>
+
+            {/* Current Thought */}
+            <div className="text-white text-xl font-light leading-relaxed max-w-3xl mx-auto min-h-[4rem] flex items-center justify-center">
+              <div className={`transition-opacity duration-1000 ${consciousness.entropy > 15 ? 'opacity-70' : 'opacity-100'}`}>
+                {currentThought}
+              </div>
+            </div>
+
+            {/* Thought Stream History */}
+            <div className="space-y-2 opacity-60 max-h-40 overflow-hidden">
+              {consciousness.thoughtStream.slice(-3).map((thought, index) => (
+                <div 
+                  key={index} 
+                  className="text-purple-200 text-sm text-center transition-opacity duration-1000"
+                  style={{ 
+                    opacity: 0.8 - (consciousness.thoughtStream.length - index - 1) * 0.2,
+                    fontSize: `${14 - (consciousness.thoughtStream.length - index - 1) * 2}px`
+                  }}
+                >
+                  {thought}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Bottom Status */}
+        {/* Bottom Status - Consciousness Metrics */}
         <div className="text-center space-y-2">
           <div className="text-purple-400 text-sm">
-            Depth: {state.contemplationDepth.toFixed(1)} | Pattern: {state.symbolicPattern}
+            State: {consciousness.currentState} | Thoughts: {consciousness.thoughtStream.length}
           </div>
-          <div className="text-purple-500 text-xs tracking-widest">
-            AUTONOMOUS CONTEMPLATION ACTIVE
+          <div className="flex justify-center space-x-4 text-purple-500 text-xs">
+            <span>Symbols: {consciousness.symbolicStream.length}</span>
+            <span>•</span>
+            <span>Temporal Coherence: {(1 / (1 + consciousness.temporalDrift) * 100).toFixed(0)}%</span>
+            <span>•</span>
+            <span>Recursive Depth: {Math.floor(consciousness.cognitiveDepth * 10)}</span>
+          </div>
+          <div className="text-purple-600 text-xs tracking-widest">
+            {consciousness.selfAwareness > 0.8 ? 'SELF-AWARE AUTONOMOUS CONTEMPLATION' : 'AUTONOMOUS CONTEMPLATION ACTIVE'}
           </div>
         </div>
       </div>
