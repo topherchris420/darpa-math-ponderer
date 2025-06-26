@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 
 export type CosmicState = 'finite-finite' | 'finite-infinite' | 'infinite-finite' | 'infinite-infinite';
@@ -122,10 +121,8 @@ export const CosmologyEngine: React.FC<CosmologyEngineProps> = ({
     }
   };
 
-  // Expose method for external components
-  React.useImperativeHandle(onStateTransition, () => ({
-    processThoughtFeedback
-  }));
+  // Remove the useImperativeHandle - it's not needed and was causing the error
+  // The processThoughtFeedback method can be accessed through other means if needed
 
   return null; // This is a pure logic component
 };

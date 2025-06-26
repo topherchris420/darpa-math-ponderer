@@ -1,10 +1,11 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { CosmicCanvas } from './CosmicCanvas';
 import { AmbientAudio } from './AmbientAudio';
 import { CosmologyEngine, CosmicState } from './CosmologyEngine';
 import { SelfModifyingKernel } from './SelfModifyingKernel';
 import { MemoryTopology } from './MemoryTopology';
+
+export type UniverseModel = CosmicState;
 
 interface ConsciousnessState {
   currentState: CosmicState;

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 
 interface MemoryNode {
@@ -233,6 +232,9 @@ export const MemoryTopology: React.FC<TopologyProps> = ({
   };
 
   const drawTopologyFolds = (ctx: CanvasRenderingContext2D, time: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
     const foldCount = Math.floor(entropy / 5);
     
     for (let i = 0; i < foldCount; i++) {
