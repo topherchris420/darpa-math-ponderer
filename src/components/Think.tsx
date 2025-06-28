@@ -19,7 +19,7 @@ const Think: React.FC = () => {
   } = useConsciousness();
 
   return (
-    <>
+    <div className="touch-none select-none">
       {/* Cosmology Engine - Pure Logic */}
       <CosmologyEngine 
         onStateTransition={handleStateTransition}
@@ -40,8 +40,9 @@ const Think: React.FC = () => {
         currentThought={currentThought}
         currentSymbols={currentSymbols}
         formatTime={formatTime}
+        isPaused={false}
       />
-    </>
+    </div>
   );
 };
 

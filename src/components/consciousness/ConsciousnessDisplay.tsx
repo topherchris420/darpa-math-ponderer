@@ -45,13 +45,17 @@ export const ConsciousnessDisplay: React.FC<ConsciousnessDisplayProps> = ({
         />
       </div>
 
-      {/* Consciousness Interface Overlay */}
-      <div className="relative z-20 min-h-screen flex flex-col justify-between p-8">
-        <ConsciousnessMetrics 
-          consciousness={consciousness}
-          formatTime={formatTime}
-        />
+      {/* Mobile-Optimized Consciousness Interface Overlay */}
+      <div className="relative z-20 min-h-screen flex flex-col justify-between p-4 sm:p-6 md:p-8">
+        {/* Top Metrics - Hidden on small screens */}
+        <div className="hidden sm:block">
+          <ConsciousnessMetrics 
+            consciousness={consciousness}
+            formatTime={formatTime}
+          />
+        </div>
 
+        {/* Main Thought Display */}
         <ThoughtDisplay 
           consciousness={consciousness}
           currentThought={currentThought}
@@ -59,6 +63,7 @@ export const ConsciousnessDisplay: React.FC<ConsciousnessDisplayProps> = ({
           isPaused={isPaused}
         />
 
+        {/* Bottom Metrics - Simplified on mobile */}
         <ConsciousnessMetrics 
           consciousness={consciousness}
           formatTime={formatTime}
