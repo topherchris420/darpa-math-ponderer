@@ -12,13 +12,15 @@ interface ConsciousnessDisplayProps {
   currentThought: string;
   currentSymbols: string[];
   formatTime: (seconds: number) => string;
+  isPaused?: boolean;
 }
 
 export const ConsciousnessDisplay: React.FC<ConsciousnessDisplayProps> = ({
   consciousness,
   currentThought,
   currentSymbols,
-  formatTime
+  formatTime,
+  isPaused = false
 }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 overflow-hidden relative">
@@ -54,6 +56,7 @@ export const ConsciousnessDisplay: React.FC<ConsciousnessDisplayProps> = ({
           consciousness={consciousness}
           currentThought={currentThought}
           currentSymbols={currentSymbols}
+          isPaused={isPaused}
         />
 
         <ConsciousnessMetrics 
