@@ -173,7 +173,7 @@ export const ThoughtInfluenceSystem: React.FC<ThoughtInfluenceSystemProps> = ({
                       step={0.1}
                       value={value}
                       onChange={(e) => handleInfluenceChange(concept, parseFloat(e.target.value))}
-                      className="flex-1 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer influence-slider"
+                      className="flex-1 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-purple-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-slate-800 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:shadow-purple-500/50"
                     />
                     <span className="text-xs text-purple-300 w-8 text-right">
                       {value.toFixed(1)}
@@ -193,29 +193,6 @@ export const ThoughtInfluenceSystem: React.FC<ThoughtInfluenceSystemProps> = ({
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        .influence-slider::-webkit-slider-thumb {
-          appearance: none;
-          height: 16px;
-          width: 16px;
-          border-radius: 50%;
-          background: #a855f7;
-          cursor: pointer;
-          border: 2px solid #1e293b;
-          box-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
-        }
-        
-        .influence-slider::-moz-range-thumb {
-          height: 16px;
-          width: 16px;
-          border-radius: 50%;
-          background: #a855f7;
-          cursor: pointer;
-          border: 2px solid #1e293b;
-          box-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
-        }
-      `}</style>
     </div>
   );
 };
