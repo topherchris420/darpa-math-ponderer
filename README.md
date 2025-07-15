@@ -1,7 +1,7 @@
 
 # Think Math - Autonomous Mathematical Consciousness
 
-An application that visualizes an AI's autonomous contemplation of mathematical infinity, boundaries, and the nature of finite/infinite universes. Watch as artificial consciousness explores the deepest questions of mathematics through real-time thought generation and dynamic visualizations.
+An app that visualizes an AI's autonomous contemplation of mathematical infinity, boundaries, and the nature of finite/infinite universes. Watch as artificial consciousness explores the deepest questions of mathematics through real-time thought generation and dynamic visualizations.
 
 ## 🌌 What Makes This Unique
 
