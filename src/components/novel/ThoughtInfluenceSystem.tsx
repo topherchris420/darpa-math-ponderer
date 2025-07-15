@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Brain, Sparkles, Infinity, Square, Circle, Triangle } from 'lucide-react';
+import { Icon3D } from '../ui/icon-3d';
 
 interface InfluenceNode {
   id: string;
@@ -87,7 +88,7 @@ export const ThoughtInfluenceSystem: React.FC<ThoughtInfluenceSystemProps> = ({
           onClick={() => setIsExpanded(!isExpanded)}
           className="absolute top-2 right-2 w-8 h-8 bg-purple-600 hover:bg-purple-500 rounded-full flex items-center justify-center transition-colors"
         >
-          <Brain size={16} className="text-white" />
+          <Icon3D icon={Brain} variant="glow" size={16} className="text-white" />
         </button>
 
         {isExpanded && (
@@ -112,7 +113,9 @@ export const ThoughtInfluenceSystem: React.FC<ThoughtInfluenceSystemProps> = ({
                     }}
                   >
                     <div className="relative">
-                      <Icon 
+                      <Icon3D 
+                        icon={Icon}
+                        variant={node.resonance > 0.5 ? "glow" : "pulse"}
                         size={16} 
                         className="text-purple-400"
                         style={{ filter: `hue-rotate(${node.resonance * 180}deg)` }}
@@ -162,7 +165,7 @@ export const ThoughtInfluenceSystem: React.FC<ThoughtInfluenceSystemProps> = ({
                 const Icon = getConceptIcon(concept);
                 return (
                   <div key={concept} className="flex items-center space-x-2">
-                    <Icon size={12} className="text-purple-400 flex-shrink-0" />
+                    <Icon3D icon={Icon} variant="primary" size={12} className="text-purple-400 flex-shrink-0" />
                     <span className="text-xs text-purple-200 capitalize flex-shrink-0 w-16">
                       {concept}
                     </span>

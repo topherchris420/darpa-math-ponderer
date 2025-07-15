@@ -1,6 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { Brain, Infinity, Users, ExternalLink } from 'lucide-react';
+import { Icon3D } from '../components/ui/icon-3d';
 
 const Index = () => {
   return (
@@ -25,7 +26,7 @@ const Index = () => {
             <div className="relative space-y-3 sm:space-y-4">
               <div className="flex items-center justify-center">
                 <div className="p-3 sm:p-4 rounded-full bg-purple-600/20 group-hover:bg-purple-500/30 transition-colors duration-300">
-                  <Brain className="w-10 h-10 sm:w-12 sm:h-12 text-purple-300" />
+                  <Icon3D icon={Brain} variant="glow" size={48} className="text-purple-300" />
                 </div>
               </div>
               <h2 className="text-xl sm:text-2xl font-light text-white">THINK</h2>
@@ -34,7 +35,7 @@ const Index = () => {
                 Pure contemplative exploration without interaction.
               </p>
               <div className="flex items-center justify-center space-x-2 text-purple-400 text-xs">
-                <Infinity className="w-4 h-4" />
+                <Icon3D icon={Infinity} variant="rotate" size={16} />
                 <span>Autonomous Contemplation</span>
               </div>
             </div>
@@ -49,7 +50,7 @@ const Index = () => {
             <div className="relative space-y-3 sm:space-y-4">
               <div className="flex items-center justify-center">
                 <div className="p-3 sm:p-4 rounded-full bg-blue-600/20 group-hover:bg-blue-500/30 transition-colors duration-300">
-                  <Users className="w-10 h-10 sm:w-12 sm:h-12 text-blue-300" />
+                  <Icon3D icon={Users} variant="floating" size={48} className="text-blue-300" />
                 </div>
               </div>
               <h2 className="text-xl sm:text-2xl font-light text-white">COLLABORATE</h2>
@@ -58,7 +59,7 @@ const Index = () => {
                 Explore novel structures, theorems, and conjectures.
               </p>
               <div className="flex items-center justify-center space-x-2 text-blue-400 text-xs">
-                <Brain className="w-4 h-4" />
+                <Icon3D icon={Brain} variant="pulse" size={16} />
                 <span>Human-AI Synergy</span>
               </div>
             </div>
@@ -75,7 +76,7 @@ const Index = () => {
             <div className="relative space-y-3 sm:space-y-4">
               <div className="flex items-center justify-center">
                 <div className="p-3 sm:p-4 rounded-full bg-emerald-600/20 group-hover:bg-emerald-500/30 transition-colors duration-300">
-                  <ExternalLink className="w-10 h-10 sm:w-12 sm:h-12 text-emerald-300" />
+                  <Icon3D icon={ExternalLink} variant="glow" size={48} className="text-emerald-300" />
                 </div>
               </div>
               <h2 className="text-xl sm:text-2xl font-light text-white">EXPLORE</h2>
@@ -84,7 +85,7 @@ const Index = () => {
                 Discover new frontiers in mathematical modeling.
               </p>
               <div className="flex items-center justify-center space-x-2 text-emerald-400 text-xs">
-                <ExternalLink className="w-4 h-4" />
+                <Icon3D icon={ExternalLink} variant="primary" size={16} />
                 <span>External Platform</span>
               </div>
             </div>
