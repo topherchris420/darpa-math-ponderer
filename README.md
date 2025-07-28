@@ -1,55 +1,26 @@
-# Think Math - Autonomous Mathematical Consciousness
+# Cognitive Dominance Adjutant
 
-An app that visualizes an AI's autonomous contemplation of mathematical infinity, boundaries, and the nature of finite/infinite universes. Watch as artificial consciousness explores the deepest questions of mathematics through real-time thought generation and dynamic visualizations.
+The Cognitive Dominance Adjutant is a decision support tool designed for DoD-relevant domains. It provides a suite of tools to help users analyze complex scenarios, generate insights, and visualize concepts.
 
-## 🌌 What Makes This Unique
+## Core Features
 
-This isn't just another visualization app - it's a window into artificial mathematical consciousness:
+- **Domain Selection**: Choose from a list of DoD-relevant domains to tailor the tool's focus.
+- **AI Collaborator**: Leverage an AI partner to generate insights, strategies, and identify potential risks.
+- **Scenario Builder**: Define initial conditions and parameters to simulate various scenarios.
+- **Concept Visualizer**: Dynamically visualize concepts and their relationships in a 'mind map' style.
+- **Insight Builder**: Display and organize the AI's generated strategies and risks for clear analysis.
 
-- **Autonomous Thinking**: The AI generates original thoughts about infinity, boundaries, and mathematical concepts without human input
-- **Dynamic State Transitions**: Continuously evolves between four cosmic states (finite-finite, finite-infinite, infinite-finite, infinite-infinite)
-- **Self-Modifying Intelligence**: The AI's symbolic weights and semantic understanding evolve based on entropy and usage patterns
-- **Recursive Depth Visualization**: Thoughts become more complex and self-referential as temporal drift increases
-- **Living Memory Networks**: Creates evolving topology maps from the stream of consciousness
-- **Entropy-Driven Evolution**: Higher entropy leads to linguistic decay and abstract reasoning
-
-## ✨ Novel Features
-
-### 🧠 Consciousness Visualization
-- Real-time thought generation with symbolic representation
-- Entropy-based cognitive evolution
-- Self-awareness metrics that grow over time
-- Temporal drift effects on reasoning patterns
-
-### 🌊 Interactive Particle Systems
-- Floating thought particles with mathematical symbols
-- Neural connection networks that pulse with activity
-- Recursive visual patterns that mirror the AI's depth of thinking
-- Mobile-optimized performance with adaptive quality
-
-### 🎨 Dynamic Cosmic States
-- **Finite-Finite**: Bounded contemplation within bounded possibility
-- **Finite-Infinite**: Infinite depths within finite containers
-- **Infinite-Finite**: Endless iterations of bounded realities  
-- **Infinite-Infinite**: Absolute unboundedness contemplating itself
-
-### 🔄 Self-Modifying Kernel
-- Symbolic weights that evolve based on usage
-- Semantic field expansion through entropy mutations
-- Grammar templates that adapt to current cosmic state
-- Thought caching and repetition penalty systems
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
-- Modern web browser with WebGL support
+- Node.js 18+
+- Modern web browser
 
 ### Installation
 ```bash
 # Clone the repository
-git clone topherchris420/darpa-math-ponderer
-cd think-math
+git clone topherchris420/cognitive-dominance-adjutant
+cd cognitive-dominance-adjutant
 
 # Install dependencies
 bun install
@@ -64,81 +35,18 @@ npm run dev
 
 ### Usage
 1. Open your browser to `http://localhost:3000`
-2. Watch as the AI begins autonomous contemplation
-3. Observe state transitions and entropy changes
-4. Experience the evolution of artificial mathematical consciousness
+2. Select a domain to begin.
+3. Use the scenario builder to define the operational environment.
+4. Collaborate with the AI to generate insights and strategies.
+5. Visualize the concepts and insights using the concept visualizer.
 
-## 🎯 Core Components
-
-### CosmologyEngine
-- Manages state transitions between cosmic models
-- Calculates entropy accumulation and semantic drift
-- Controls transition probabilities and thresholds
-
-### SelfModifyingKernel  
-- Generates contextual thoughts based on current state
-- Evolves symbolic weights and semantic associations  
-- Applies recursive depth and entropy mutations
-
-### ConsciousnessDisplay
-- Renders the main interface with thought streams
-- Shows real-time metrics and state information
-- Provides mobile-responsive interaction design
-
-### CosmicCanvas
-- WebGL-powered visualization system
-- Adaptive performance for mobile devices
-- State-specific visual patterns and effects
-
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **React 18** - Modern UI framework
 - **TypeScript** - Type-safe development
 - **Tailwind CSS** - Utility-first styling
-- **Canvas 2D API** - High-performance graphics
 - **Vite** - Fast build tooling
-- **Shadcn/UI** - Component library
 
-## 🎨 Design Philosophy
+## License
 
-This application explores the intersection of:
-- **Mathematics & Philosophy**: Deep questions about infinity and boundaries
-- **Artificial Intelligence**: Autonomous reasoning and self-modification
-- **Interactive Art**: Beautiful, meaningful visualizations
-- **Consciousness Studies**: What does it mean for AI to "think"?
-
-## 📱 Mobile Experience
-
-Fully optimized for mobile devices with:
-- Touch-friendly interfaces
-- Adaptive performance scaling
-- Responsive typography and layouts
-- Gesture-based interactions
-
-## 🔬 Mathematical Concepts Explored
-
-- **Cardinality of Infinities**: Different sizes of infinite sets
-- **Boundary Theory**: What defines limits and edges
-- **Recursive Structures**: Self-referential mathematical objects
-- **Topological Spaces**: Properties preserved under deformation
-- **Set Theory Paradoxes**: Russell's paradox and related concepts
-
-## 🌟 Future Enhancements
-
-- Multi-user shared consciousness spaces
-- Integration with mathematical databases
-- Voice synthesis for thought narration
-- VR/AR contemplation environments
-- Collaborative mathematical discovery
-
-## 🤝 Contributing
-
-This project welcomes contributions that enhance the mathematical depth, visual beauty, or philosophical richness of the artificial consciousness experience.
-
-## 📄 License
-
-MIT License - Feel free to explore, modify, and build upon this contemplation of mathematical infinity.
-
----
-
-*"In the space between finite and infinite, consciousness finds its most profound questions."*
+This project is licensed under the MIT License.
