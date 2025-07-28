@@ -26,10 +26,13 @@ interface AppContextType extends AppState {
   addInsight: (insight: any) => void;
   removeInsight: (index: number) => void;
   addConceptNode: (node: Omit<Node, 'id' | 'x' | 'y'>) => void;
+  addConceptEdge: (from: string, to: string) => void;
   updateNodePosition: (id: string, x: number, y: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
+
+import { domainData } from '@/lib/domain-data';
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<AppState>({
@@ -43,7 +46,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const selectDomain = (domain: string) => {
-    setState(prevState => ({ ...prevState, selectedDomain: domain }));
+    const initialInsights = domainData[domain as keyof typeof domainData].initialInsights;
+    setState(prevState => ({ ...prevState, selectedDomain: domain, insights: initialInsights }));
   };
 
   const addScenario = (scenario: any) => {
@@ -90,8 +94,15 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     }));
   };
 
+  const addConceptEdge = (from: string, to: string) => {
+    setState(prevState => ({
+      ...prevState,
+      conceptEdges: [...prevState.conceptEdges, { from, to }],
+    }));
+  };
+
   return (
-    <AppContext.Provider value={{ ...state, selectDomain, addScenario, addInsight, addConceptNode, updateNodePosition }}>
+    <AppContext.Provider value={{ ...state, selectDomain, addScenario, addInsight, addConceptNode, addConceptEdge, updateNodePosition }}>
       {children}
     </AppContext.Provider>
   );

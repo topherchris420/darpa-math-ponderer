@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAppContext } from '@/context/AppContext';
+import { domainData } from '@/lib/domain-data';
 
 interface Message {
   text: string;
@@ -15,24 +16,28 @@ const AICollaborator = () => {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
+  const currentDomainData = selectedDomain ? domainData[selectedDomain as keyof typeof domainData] : null;
+
   useEffect(() => {
-    setMessages([
-      { text: `Welcome to the AI Collaborator. How can I assist you in the ${selectedDomain || 'selected'} domain?`, sender: 'ai' },
-    ]);
-  }, [selectedDomain]);
+    if (currentDomainData) {
+      setMessages([{ text: currentDomainData.aiWelcome, sender: 'ai' }]);
+    }
+  }, [currentDomainData]);
 
   const getAIResponse = (userInput: string) => {
     const lowerInput = userInput.toLowerCase();
-    if (lowerInput.includes('risk')) {
-      return 'Identifying potential risks in this domain... One major risk is the possibility of a surprise attack on our satellite network.';
+    if (currentDomainData) {
+      if (lowerInput.includes('risk')) {
+        return currentDomainData.aiResponses.risk;
+      }
+      if (lowerInput.includes('strategy')) {
+        return currentDomainData.aiResponses.strategy;
+      }
+      if (lowerInput.includes('vulnerability')) {
+        return currentDomainData.aiResponses.vulnerability;
+      }
     }
-    if (lowerInput.includes('strategy')) {
-      return 'A potential strategy would be to increase our naval presence in the South China Sea to deter aggression.';
-    }
-    if (lowerInput.includes('vulnerability')) {
-      return 'A key vulnerability is our reliance on a single point of entry for our supply chain.';
-    }
-    return `I'm not sure how to respond to that. I can help with identifying risks, developing strategies, and finding vulnerabilities.`;
+    return `I'm not sure how to respond to that. I can help with identifying risks, developing strategies, and finding vulnerabilities in the ${selectedDomain || 'selected'} domain.`;
   };
 
   const handleSendMessage = () => {
@@ -63,7 +68,7 @@ const AICollaborator = () => {
               }`}
             >
               <div
-                className={`p-3 rounded-lg max-w-xs ${
+                className={`p-3 rounded-lg max-w-xs transition-all duration-300 ${
                   message.sender === 'user'
                     ? 'bg-blue-600 text-white'
                     : 'bg-slate-700 text-slate-300'

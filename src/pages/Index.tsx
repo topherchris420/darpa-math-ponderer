@@ -49,8 +49,8 @@ const Index = () => {
         </div>
 
         {activeComponent ? (
-          <div className="w-full max-w-4xl mx-auto">
-            <button onClick={() => setActiveComponent(null)} className="mb-4 bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded">
+          <div className="w-full max-w-4xl mx-auto animate-fade-in">
+            <button onClick={() => setActiveComponent(null)} className="mb-4 bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300">
               Back to Menu
             </button>
             {renderActiveComponent()}
@@ -58,7 +58,7 @@ const Index = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {/* Domain Selection */}
-            <div onClick={() => setActiveComponent('domain')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-cyan-500/20 p-6 hover:border-cyan-400/40 transition-all duration-300 hover:scale-105">
+            <div onClick={() => setActiveComponent('domain')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-cyan-500/20 p-6 hover:border-cyan-400/40 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/10">
               <div className="relative space-y-4">
                 <div className="flex items-center justify-center">
                   <div className="p-4 rounded-full bg-cyan-600/20 group-hover:bg-cyan-500/30 transition-colors duration-300">
@@ -73,7 +73,7 @@ const Index = () => {
             </div>
 
             {/* AI Collaborator */}
-            <div onClick={() => setActiveComponent('collaborator')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-teal-500/20 p-6 hover:border-teal-400/40 transition-all duration-300 hover:scale-105">
+            <div onClick={() => setActiveComponent('collaborator')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-teal-500/20 p-6 hover:border-teal-400/40 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-teal-500/10">
               <div className="relative space-y-4">
                 <div className="flex items-center justify-center">
                   <div className="p-4 rounded-full bg-teal-600/20 group-hover:bg-teal-500/30 transition-colors duration-300">
@@ -88,7 +88,7 @@ const Index = () => {
             </div>
 
             {/* Scenario Builder */}
-            <div onClick={() => setActiveComponent('scenario')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-blue-500/20 p-6 hover:border-blue-400/40 transition-all duration-300 hover:scale-105">
+            <div onClick={() => setActiveComponent('scenario')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-blue-500/20 p-6 hover:border-blue-400/40 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10">
               <div className="relative space-y-4">
                 <div className="flex items-center justify-center">
                   <div className="p-4 rounded-full bg-blue-600/20 group-hover:bg-blue-500/30 transition-colors duration-300">
@@ -103,7 +103,7 @@ const Index = () => {
             </div>
 
             {/* Concept Visualizer */}
-            <div onClick={() => setActiveComponent('visualizer')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-purple-500/20 p-6 hover:border-purple-400/40 transition-all duration-300 hover:scale-105 lg:col-span-2">
+            <div onClick={() => setActiveComponent('visualizer')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-purple-500/20 p-6 hover:border-purple-400/40 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/10 lg:col-span-2">
               <div className="relative space-y-4">
                 <div className="flex items-center justify-center">
                   <div className="p-4 rounded-full bg-purple-600/20 group-hover:bg-purple-500/30 transition-colors duration-300">
@@ -118,7 +118,7 @@ const Index = () => {
             </div>
 
             {/* Insight Builder */}
-            <div onClick={() => setActiveComponent('insight')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-amber-500/20 p-6 hover:border-amber-400/40 transition-all duration-300 hover:scale-105">
+            <div onClick={() => setActiveComponent('insight')} className="cursor-pointer group relative overflow-hidden rounded-lg bg-slate-800/60 backdrop-blur-sm border border-amber-500/20 p-6 hover:border-amber-400/40 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-amber-500/10">
               <div className="relative space-y-4">
                 <div className="flex items-center justify-center">
                   <div className="p-4 rounded-full bg-amber-600/20 group-hover:bg-amber-500/30 transition-colors duration-300">

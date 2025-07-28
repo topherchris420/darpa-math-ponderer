@@ -13,6 +13,8 @@ const ScenarioBuilder = () => {
   const [initialConditions, setInitialConditions] = useState('');
   const [objectives, setObjectives] = useState('');
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!scenarioName) {
@@ -23,15 +25,19 @@ const ScenarioBuilder = () => {
       });
       return;
     }
-    const newScenario = { name: scenarioName, conditions: initialConditions, objectives };
-    addScenario(newScenario);
-    toast({
-      title: "Scenario Saved",
-      description: `Scenario "${scenarioName}" has been saved.`,
-    });
-    setScenarioName('');
-    setInitialConditions('');
-    setObjectives('');
+    setIsSaving(true);
+    setTimeout(() => {
+      const newScenario = { name: scenarioName, conditions: initialConditions, objectives };
+      addScenario(newScenario);
+      toast({
+        title: "Scenario Saved",
+        description: `Scenario "${scenarioName}" has been saved.`,
+      });
+      setScenarioName('');
+      setInitialConditions('');
+      setObjectives('');
+      setIsSaving(false);
+    }, 1500);
   };
 
   return (
@@ -77,8 +83,8 @@ const ScenarioBuilder = () => {
                 className="bg-slate-700 border-slate-600 text-white"
               />
             </div>
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-500">
-              Save Scenario
+            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-500" disabled={isSaving}>
+              {isSaving ? 'Saving...' : 'Save Scenario'}
             </Button>
           </form>
         </div>

@@ -2,11 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '@/context/AppContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 const ConceptVisualizer = () => {
-  const { conceptNodes, conceptEdges, addConceptNode, updateNodePosition } = useAppContext();
+  const { conceptNodes, conceptEdges, addConceptNode, addConceptEdge, updateNodePosition } = useAppContext();
   const [newNodeLabel, setNewNodeLabel] = useState('');
   const [draggingNode, setDraggingNode] = useState<string | null>(null);
+  const [isConnectMode, setIsConnectMode] = useState(false);
+  const [fromNode, setFromNode] = useState<string | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
   const handleAddNode = () => {
@@ -15,7 +19,20 @@ const ConceptVisualizer = () => {
     setNewNodeLabel('');
   };
 
+  const handleNodeClick = (id: string) => {
+    if (!isConnectMode) return;
+    if (!fromNode) {
+      setFromNode(id);
+    } else {
+      if (fromNode !== id) {
+        addConceptEdge(fromNode, id);
+      }
+      setFromNode(null);
+    }
+  };
+
   const handleMouseDown = (e: React.MouseEvent, id: string) => {
+    if (isConnectMode) return;
     setDraggingNode(id);
   };
 
@@ -57,6 +74,10 @@ const ConceptVisualizer = () => {
         <Button onClick={handleAddNode} className="bg-purple-600 hover:bg-purple-500">
           Add Node
         </Button>
+        <div className="flex items-center space-x-2">
+          <Switch id="connect-mode" checked={isConnectMode} onCheckedChange={setIsConnectMode} />
+          <Label htmlFor="connect-mode" className="text-white">Connect Mode</Label>
+        </div>
       </div>
       <svg ref={svgRef} width="100%" height="600" className="bg-slate-800/50 rounded-lg cursor-grab active:cursor-grabbing">
         {conceptEdges.map((edge, i) => {
@@ -80,11 +101,19 @@ const ConceptVisualizer = () => {
             key={node.id}
             transform={`translate(${node.x}, ${node.y})`}
             onMouseDown={(e) => handleMouseDown(e, node.id)}
-            className="cursor-pointer"
+            onClick={() => handleNodeClick(node.id)}
+            className={`cursor-grab ${draggingNode === node.id ? 'cursor-grabbing' : ''} ${isConnectMode ? 'cursor-pointer' : ''}`}
           >
-            <circle cx="0" cy="0" r="10" fill="#8B5CF6" />
+            <circle
+              cx="0"
+              cy="0"
+              r="12"
+              fill={fromNode === node.id ? '#F87171' : (draggingNode === node.id ? '#A78BFA' : '#8B5CF6')}
+              stroke={draggingNode === node.id ? '#C4B5FD' : 'none'}
+              strokeWidth="2"
+            />
             <text
-              x="15"
+              x="20"
               y="5"
               fill="#E2E8F0"
               fontSize="14"
