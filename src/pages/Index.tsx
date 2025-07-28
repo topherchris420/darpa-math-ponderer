@@ -6,22 +6,22 @@ import AICollaborator from '../components/cda/AICollaborator';
 import ScenarioBuilder from '../components/cda/ScenarioBuilder';
 import ConceptVisualizer from '../components/cda/ConceptVisualizer';
 import InsightBuilder from '../components/cda/InsightBuilder';
+import { useAppContext } from '../context/AppContext';
 
 type ActiveComponent = 'domain' | 'collaborator' | 'scenario' | 'visualizer' | 'insight' | null;
 
 const Index = () => {
   const [activeComponent, setActiveComponent] = useState<ActiveComponent>(null);
-  const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
+  const { selectedDomain } = useAppContext();
 
-  const handleSelectDomain = (domain: string) => {
-    setSelectedDomain(domain);
-    setActiveComponent(null); // Or navigate to the next relevant component
+  const handleDomainSelected = () => {
+    setActiveComponent(null);
   };
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
       case 'domain':
-        return <DomainSelector onSelectDomain={handleSelectDomain} />;
+        return <DomainSelector onDomainSelected={handleDomainSelected} />;
       case 'collaborator':
         return <AICollaborator />;
       case 'scenario':
