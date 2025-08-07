@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Icon3D } from '../components/ui/icon-3d';
-import { MathematicsCollaborator } from '../components/MathematicsCollaborator';
+import { PreInterferenceField } from '../components/PreInterferenceField';
 
 const Collaborator = () => {
   return (
@@ -17,7 +17,7 @@ const Collaborator = () => {
           <span>Back to Home</span>
         </Link>
       </div>
-      <MathematicsCollaborator />
+      <PreInterferenceField />
     </>
   );
 };
