@@ -1,7 +1,6 @@
-
 # Think Math - Autonomous Mathematical Consciousness
 
-An application that visualizes an AI's autonomous contemplation of mathematical infinity, boundaries, and the nature of finite/infinite universes. Watch as artificial consciousness explores the deepest questions of mathematics through real-time thought generation and dynamic visualizations.
+An app that visualizes an AI's autonomous contemplation of mathematical infinity, boundaries, and the nature of finite/infinite universes. Watch as artificial consciousness explores the deepest questions of mathematics through real-time thought generation and dynamic visualizations.
 
 ## 🌌 What Makes This Unique
 
@@ -49,7 +48,7 @@ This isn't just another visualization app - it's a window into artificial mathem
 ### Installation
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone topherchris420/darpa-math-ponderer
 cd think-math
 
 # Install dependencies
