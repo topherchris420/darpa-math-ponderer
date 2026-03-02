@@ -1,105 +1,100 @@
+import {
+  ArrowRight,
+  Atom,
+  Brain,
+  ExternalLink,
+  Infinity,
+  Sparkles,
+  Users
+} from "lucide-react";
+import { HomeModuleCard } from "@/components/home/HomeModuleCard";
+import { HomeStatCard } from "@/components/home/HomeStatCard";
 
-import { Link } from 'react-router-dom';
-import { Brain, Infinity, Users, ExternalLink } from 'lucide-react';
-import { Icon3D } from '../components/ui/icon-3d';
+const modules = [
+  {
+    title: "THINK",
+    description:
+      "Autonomous AI contemplation on finite and infinite universes, with evolving symbolic narratives and emergent memory.",
+    badge: "Autonomous Contemplation",
+    icon: Brain,
+    accentIcon: Infinity,
+    iconVariant: "glow" as const,
+    badgeVariant: "rotate" as const,
+    tone: "purple" as const,
+    to: "/infinity"
+  },
+  {
+    title: "COLLABORATE",
+    description:
+      "Human + AI co-discovery for theorem ideation, conjecture development, and novel mathematical structure exploration.",
+    badge: "Human-AI Synergy",
+    icon: Users,
+    accentIcon: Brain,
+    iconVariant: "floating" as const,
+    badgeVariant: "pulse" as const,
+    tone: "blue" as const,
+    to: "/collaborator"
+  },
+  {
+    title: "EXPLORE",
+    description:
+      "Dynamic systems tooling and advanced visual models for pushing experiments beyond static equations and into living behavior.",
+    badge: "External Platform",
+    icon: ExternalLink,
+    accentIcon: ArrowRight,
+    iconVariant: "glow" as const,
+    badgeVariant: "primary" as const,
+    tone: "emerald" as const,
+    href: "https://vers3dynamics.com/",
+    external: true,
+    className: "sm:col-span-2 lg:col-span-1"
+  }
+];
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 flex items-center justify-center">
-      <div className="text-center space-y-6 sm:space-y-8 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
-        <div className="space-y-2 sm:space-y-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-thin text-white tracking-widest">
-            MATHEMATICS
-          </h1>
-          <p className="text-lg sm:text-xl text-purple-200 font-light max-w-2xl mx-auto px-4">
-            An immersive environment for mathematical exploration and AI-powered discovery
+    <main className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
+      <div className="aurora-bg" aria-hidden />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(147,51,234,0.15),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(59,130,246,0.14),transparent_35%),radial-gradient(circle_at_50%_85%,rgba(16,185,129,0.12),transparent_35%)]" aria-hidden />
+      <div className="grid-overlay" aria-hidden />
+
+      <section className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-center gap-10 px-4 py-12 sm:px-6 lg:py-16">
+        <header className="space-y-6 text-center">
+          <p className="inline-flex items-center gap-2 rounded-full border border-purple-300/30 bg-purple-300/10 px-4 py-1 text-xs tracking-[0.2em] text-purple-200">
+            <Sparkles size={14} />
+            CONSCIOUS MATHEMATICS INTERFACE
           </p>
+
+          <div className="space-y-4">
+            <h1 className="text-balance text-4xl font-thin tracking-[0.24em] text-white sm:text-5xl lg:text-6xl">
+              MATHEMATICS
+            </h1>
+            <p className="mx-auto max-w-3xl text-pretty text-base font-light leading-relaxed text-slate-200 sm:text-lg">
+              A redesigned launchpad for mathematical discovery—clear pathways, stronger visual hierarchy, and a more immersive cosmic atmosphere.
+            </p>
+          </div>
+
+          <div className="mx-auto grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3">
+            <HomeStatCard label="Domains" value="3 active modules" />
+            <HomeStatCard label="Core Focus" value="Infinity + Topology" />
+            <HomeStatCard label="Interaction" value="Autonomous + Co-creative" />
+          </div>
+        </header>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {modules.map((module) => (
+            <HomeModuleCard key={module.title} {...module} />
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto px-2">
-          {/* Think Module */}
-          <Link 
-            to="/infinity" 
-            className="group relative overflow-hidden rounded-lg bg-gradient-to-br from-purple-900/40 to-slate-800/40 backdrop-blur-sm border border-purple-500/20 p-6 sm:p-8 hover:border-purple-400/40 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative space-y-3 sm:space-y-4">
-              <div className="flex items-center justify-center">
-                <div className="p-3 sm:p-4 rounded-full bg-purple-600/20 group-hover:bg-purple-500/30 transition-colors duration-300">
-                  <Icon3D icon={Brain} variant="glow" size={48} className="text-purple-300" />
-                </div>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-light text-white">THINK</h2>
-              <p className="text-purple-200 text-sm leading-relaxed">
-                Autonomous AI contemplation on the nature of finite and infinite universes. 
-                Pure contemplative exploration without interaction.
-              </p>
-              <div className="flex items-center justify-center space-x-2 text-purple-400 text-xs">
-                <Icon3D icon={Infinity} variant="rotate" size={16} />
-                <span>Autonomous Contemplation</span>
-              </div>
-            </div>
-          </Link>
-
-          {/* Collaborator Module */}
-          <Link 
-            to="/collaborator" 
-            className="group relative overflow-hidden rounded-lg bg-gradient-to-br from-blue-900/40 to-slate-800/40 backdrop-blur-sm border border-blue-500/20 p-6 sm:p-8 hover:border-blue-400/40 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative space-y-3 sm:space-y-4">
-              <div className="flex items-center justify-center">
-                <div className="p-3 sm:p-4 rounded-full bg-blue-600/20 group-hover:bg-blue-500/30 transition-colors duration-300">
-                  <Icon3D icon={Users} variant="floating" size={48} className="text-blue-300" />
-                </div>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-light text-white">COLLABORATE</h2>
-              <p className="text-blue-200 text-sm leading-relaxed">
-                AI-powered mathematical discovery through human-machine collaboration. 
-                Explore novel structures, theorems, and conjectures.
-              </p>
-              <div className="flex items-center justify-center space-x-2 text-blue-400 text-xs">
-                <Icon3D icon={Brain} variant="pulse" size={16} />
-                <span>Human-AI Synergy</span>
-              </div>
-            </div>
-          </Link>
-
-          {/* Explore Module */}
-          <a 
-            href="https://vers3dynamics.com/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="group relative overflow-hidden rounded-lg bg-gradient-to-br from-emerald-900/40 to-slate-800/40 backdrop-blur-sm border border-emerald-500/20 p-6 sm:p-8 hover:border-emerald-400/40 transition-all duration-300 hover:scale-105 active:scale-95 touch-manipulation sm:col-span-2 lg:col-span-1"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative space-y-3 sm:space-y-4">
-              <div className="flex items-center justify-center">
-                <div className="p-3 sm:p-4 rounded-full bg-emerald-600/20 group-hover:bg-emerald-500/30 transition-colors duration-300">
-                  <Icon3D icon={ExternalLink} variant="glow" size={48} className="text-emerald-300" />
-                </div>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-light text-white">EXPLORE</h2>
-              <p className="text-emerald-200 text-sm leading-relaxed">
-                Advanced mathematical exploration tools and dynamic systems visualization. 
-                Discover new frontiers in mathematical modeling.
-              </p>
-              <div className="flex items-center justify-center space-x-2 text-emerald-400 text-xs">
-                <Icon3D icon={ExternalLink} variant="primary" size={16} />
-                <span>External Platform</span>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="text-purple-400 text-sm max-w-xl mx-auto px-4">
-          <p>
-            Enter a space where mathematics meets AI, where computation becomes collaboration, 
-            and where new mathematical frontiers emerge through human-machine synergy.
-          </p>
-        </div>
-      </div>
-    </div>
+        <footer className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center text-sm leading-relaxed text-slate-300 backdrop-blur-sm">
+          <span className="mr-1 inline-flex align-middle text-purple-200">
+            <Atom size={16} />
+          </span>
+          Enter a space where mathematics meets intelligence, where computation becomes collaboration, and where discovery feels alive.
+        </footer>
+      </section>
+    </main>
   );
 };
 

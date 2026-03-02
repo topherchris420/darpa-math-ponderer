@@ -48,8 +48,8 @@ This isn't just another visualization app - it's a window into artificial mathem
 ### Installation
 ```bash
 # Clone the repository
-git clone topherchris420/darpa-math-ponderer
-cd think-math
+git clone https://github.com/topherchris420/darpa-math-ponderer.git
+cd darpa-math-ponderer
 
 # Install dependencies
 bun install
@@ -63,10 +63,12 @@ npm run dev
 ```
 
 ### Usage
-1. Open your browser to `http://localhost:3000`
+1. Open your browser to `http://localhost:5173`
 2. Watch as the AI begins autonomous contemplation
 3. Observe state transitions and entropy changes
 4. Experience the evolution of artificial mathematical consciousness
+
+> If port `5173` is busy, Vite automatically selects another port and prints it in the terminal.
 
 ## 🎯 Core Components
 
