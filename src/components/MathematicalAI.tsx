@@ -233,33 +233,33 @@ export const MathematicalAI: React.FC<MathematicalAIProps> = ({
   };
 
   return (
-    <div className="bg-slate-800/30 backdrop-blur-sm rounded-lg p-6 border border-purple-500/20">
+    <div className="bg-card/30 backdrop-blur-sm rounded-lg p-6 border border-primary/20">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <Brain className={`w-6 h-6 ${isReasoning ? 'text-purple-400 animate-pulse' : 'text-slate-400'}`} />
-          <h3 className="text-lg font-light text-white">Mathematical AI Collaborator</h3>
+          <Brain className={`w-6 h-6 ${isReasoning ? 'text-primary animate-pulse' : 'text-muted-foreground'}`} />
+          <h3 className="text-lg font-light text-foreground">Mathematical AI Collaborator</h3>
         </div>
         <button
           onClick={toggleReasoning}
           className={`px-4 py-2 rounded-md transition-colors ${
-            isReasoning 
-              ? 'bg-purple-600 hover:bg-purple-700 text-white' 
-              : 'bg-slate-600 hover:bg-slate-700 text-slate-200'
+            isReasoning
+              ? 'bg-primary hover:bg-primary/90 text-primary-foreground'
+              : 'bg-muted hover:bg-muted/80 text-muted-foreground'
           }`}
         >
           {isReasoning ? 'Pause' : 'Activate'} AI
         </button>
       </div>
-      
+
       <div className="space-y-4">
         <div className="flex items-start space-x-3">
-          <Lightbulb className="w-5 h-5 text-yellow-400 mt-1 flex-shrink-0" />
-          <div className="text-slate-200 text-sm leading-relaxed">
+          <Lightbulb className="w-5 h-5 text-accent-foreground mt-1 flex-shrink-0" />
+          <div className="text-foreground/90 text-sm leading-relaxed">
             {reasoning.activeInquiry}
           </div>
         </div>
-        
-        <div className="flex items-center space-x-4 text-xs text-slate-400">
+
+        <div className="flex items-center space-x-4 text-xs text-muted-foreground">
           <span>Domain: {reasoning.currentDomain}</span>
           <span>•</span>
           <span>Depth: {reasoning.reasoningDepth}</span>
