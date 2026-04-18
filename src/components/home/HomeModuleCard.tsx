@@ -1,4 +1,4 @@
-import { type LucideIcon } from "lucide-react";
+import { ArrowRight, ExternalLink as ExternalLinkIcon, type LucideIcon } from "lucide-react";
 import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Icon3D } from "@/components/ui/icon-3d";
@@ -18,6 +18,7 @@ type HomeModuleCardProps = {
   href?: string;
   external?: boolean;
   className?: string;
+  cta?: string;
 };
 
 const toneStyles: Record<ModuleTone, { shell: string; overlay: string; bubble: string; text: string; badge: string }> = {
@@ -59,14 +60,17 @@ export function HomeModuleCard({
   to,
   href,
   external = false,
-  className
+  className,
+  cta
 }: HomeModuleCardProps) {
   const style = toneStyles[tone];
+  const ctaLabel = cta ?? (external ? "Open" : "Enter");
+  const ariaLabel = `${ctaLabel}: ${title}`;
 
   const content: ReactNode = (
     <>
-      <div className={`absolute inset-0 bg-gradient-to-br ${style.overlay} to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100`} />
-      <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/5 blur-2xl transition-transform duration-700 group-hover:scale-125" />
+      <div className={`absolute inset-0 bg-gradient-to-br ${style.overlay} to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100`} aria-hidden />
+      <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/5 blur-2xl transition-transform duration-700 group-hover:scale-125" aria-hidden />
 
       <div className="relative flex h-full flex-col gap-5">
         <div className="flex items-center justify-center">
@@ -80,19 +84,28 @@ export function HomeModuleCard({
           <p className="text-sm leading-relaxed text-slate-200">{description}</p>
         </div>
 
-        <div className={`mt-auto flex items-center justify-center gap-2 text-xs ${style.badge}`}>
-          <Icon3D icon={accentIcon} variant={badgeVariant} size={16} />
+        <div className={`flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.18em] ${style.badge}`}>
+          <Icon3D icon={accentIcon} variant={badgeVariant} size={14} />
           <span>{badge}</span>
+        </div>
+
+        <div className={`mt-auto flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium ${style.text} transition-all group-hover:border-white/30 group-hover:bg-white/10`}>
+          <span>{ctaLabel}</span>
+          {external ? (
+            <ExternalLinkIcon size={14} aria-hidden />
+          ) : (
+            <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" aria-hidden />
+          )}
         </div>
       </div>
     </>
   );
 
-  const sharedClasses = `group relative flex overflow-hidden rounded-2xl border bg-gradient-to-br p-7 backdrop-blur-md shadow-[0_10px_45px_rgba(15,23,42,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(76,29,149,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${style.shell} ${className ?? ""}`;
+  const sharedClasses = `group relative flex min-h-[280px] overflow-hidden rounded-2xl border bg-gradient-to-br p-6 sm:p-7 backdrop-blur-md shadow-[0_10px_45px_rgba(15,23,42,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(76,29,149,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${style.shell} ${className ?? ""}`;
 
   if (to) {
     return (
-      <Link to={to} className={sharedClasses}>
+      <Link to={to} className={sharedClasses} aria-label={ariaLabel}>
         {content}
       </Link>
     );
@@ -100,7 +113,13 @@ export function HomeModuleCard({
 
   if (href) {
     return (
-      <a href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} className={sharedClasses}>
+      <a
+        href={href}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener noreferrer" : undefined}
+        className={sharedClasses}
+        aria-label={external ? `${ariaLabel} (opens in new tab)` : ariaLabel}
+      >
         {content}
       </a>
     );
