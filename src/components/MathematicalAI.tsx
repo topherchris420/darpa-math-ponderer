@@ -44,7 +44,7 @@ export const MathematicalAI: React.FC<MathematicalAIProps> = ({
   });
 
   const [isReasoning, setIsReasoning] = useState(false);
-  const reasoningInterval = useRef<NodeJS.Timeout>();
+  const reasoningInterval = useRef<ReturnType<typeof setInterval>>();
   const conceptLibrary = useRef<Map<string, MathematicalConcept[]>>(new Map());
 
   // Initialize domain-specific concept spaces
