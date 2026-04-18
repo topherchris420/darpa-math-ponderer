@@ -16,7 +16,7 @@ export const useConsciousness = () => {
 
   const [currentThought, setCurrentThought] = useState('Initiating autonomous contemplation...');
   const [currentSymbols, setCurrentSymbols] = useState(['□']);
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
   // Core consciousness loop
   useEffect(() => {
