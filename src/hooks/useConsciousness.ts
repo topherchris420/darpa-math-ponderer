@@ -1,8 +1,12 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { ConsciousnessState, CosmicState } from '../types/consciousness';
 
-export const useConsciousness = () => {
+interface UseConsciousnessOptions {
+  paused?: boolean;
+  speed?: number;
+}
+
+export const useConsciousness = ({ paused = false, speed = 1 }: UseConsciousnessOptions = {}) => {
   const [consciousness, setConsciousness] = useState<ConsciousnessState>({
     currentState: 'finite-finite',
     entropy: 0,
@@ -15,11 +19,12 @@ export const useConsciousness = () => {
   });
 
   const [currentThought, setCurrentThought] = useState('Initiating autonomous contemplation...');
-  const [currentSymbols, setCurrentSymbols] = useState(['□']);
+  const [currentSymbols, setCurrentSymbols] = useState(['boundary']);
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
-  // Core consciousness loop
   useEffect(() => {
+    if (paused) return;
+
     intervalRef.current = setInterval(() => {
       setConsciousness(prev => {
         const newTimeRunning = prev.timeRunning + 1;
@@ -35,15 +40,15 @@ export const useConsciousness = () => {
           selfAwareness: newSelfAwareness
         };
       });
-    }, 1000);
+    }, Math.max(250, 1000 / speed));
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, []);
+  }, [paused, speed]);
 
-  // Handle state transitions from cosmology engine
   const handleStateTransition = (newState: CosmicState, entropy: number) => {
+    if (paused) return;
     setConsciousness(prev => ({
       ...prev,
       currentState: newState,
@@ -51,16 +56,16 @@ export const useConsciousness = () => {
     }));
   };
 
-  // Handle entropy changes
   const handleEntropyChange = (entropy: number) => {
+    if (paused) return;
     setConsciousness(prev => ({
       ...prev,
       entropy: entropy
     }));
   };
 
-  // Handle thought generation from kernel
   const handleThoughtGenerated = (thought: string, symbols: string[]) => {
+    if (paused) return;
     setCurrentThought(thought);
     setCurrentSymbols(symbols);
     
@@ -71,7 +76,6 @@ export const useConsciousness = () => {
     }));
   };
 
-  // Format time with temporal drift effects
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;

@@ -59,12 +59,14 @@ export const ThoughtDisplay: React.FC<ThoughtDisplayProps> = ({
         <div className="text-center">
           <div className={`text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-4 text-purple-300 opacity-80 font-mono ${isPaused ? 'opacity-30' : 'animate-pulse'}`}>
             {currentSymbols.map((symbol, index) => (
-              <span 
+              <span
                 key={index}
-                className={`inline-block mx-1 sm:mx-2 hover:scale-125 transition-transform duration-300 ${isPaused ? '' : 'animate-pulse'}`}
+                className="inline-block mx-1 sm:mx-2 transition-transform duration-300 hover:scale-125"
                 style={{
-                  animation: isPaused ? 'none' : `pulse ${1 + index * 0.2}s infinite`,
-                  animationDelay: isPaused ? '0s' : `${index * 0.1}s`
+                  animationName: isPaused ? 'none' : 'pulse',
+                  animationDuration: `${1 + index * 0.2}s`,
+                  animationIterationCount: isPaused ? '1' : 'infinite',
+                  animationDelay: isPaused ? '0s' : `${index * 0.1}s`,
                 }}
               >
                 {symbol}

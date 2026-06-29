@@ -85,6 +85,9 @@ export const ThoughtInfluenceSystem: React.FC<ThoughtInfluenceSystemProps> = ({
         
         {/* Toggle Button */}
         <button
+          type="button"
+          aria-label={isExpanded ? 'Collapse thought influence field' : 'Expand thought influence field'}
+          title={isExpanded ? 'Collapse thought influence field' : 'Expand thought influence field'}
           onClick={() => setIsExpanded(!isExpanded)}
           className="absolute top-2 right-2 w-8 h-8 bg-purple-600 hover:bg-purple-500 rounded-full flex items-center justify-center transition-colors"
         >
@@ -190,7 +193,7 @@ export const ThoughtInfluenceSystem: React.FC<ThoughtInfluenceSystemProps> = ({
             <div className="mt-2 text-xs text-purple-300 text-center">
               Entropy: {currentEntropy.toFixed(1)} 
               <span className={`ml-2 ${currentEntropy > 10 ? 'text-red-400' : currentEntropy > 5 ? 'text-yellow-400' : 'text-green-400'}`}>
-                {currentEntropy > 10 ? '⚡ Chaotic' : currentEntropy > 5 ? '🌊 Active' : '🧘 Stable'}
+                {currentEntropy > 10 ? 'Chaotic' : currentEntropy > 5 ? 'Active' : 'Stable'}
               </span>
             </div>
           </div>

@@ -1,5 +1,6 @@
-
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Brain, Gauge, Network, Pause, Play, Radio, Waves } from 'lucide-react';
 import { CosmologyEngine } from './CosmologyEngine';
 import { SelfModifyingKernel } from './SelfModifyingKernel';
 import { ConsciousnessDisplay } from './consciousness/ConsciousnessDisplay';
@@ -8,12 +9,26 @@ import { ConsciousnessDepthVisualizer } from './novel/ConsciousnessDepthVisualiz
 import { MathematicalConceptNetwork } from './novel/MathematicalConceptNetwork';
 import { ThoughtResonanceSystem } from './novel/ThoughtResonanceSystem';
 import { useConsciousness } from '../hooks/useConsciousness';
+import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 export type UniverseModel = 'finite-finite' | 'finite-infinite' | 'infinite-finite' | 'infinite-infinite';
 
+type ThinkView = 'main' | 'depth' | 'network' | 'resonance';
+
+const views: Array<{ id: ThinkView; label: string; icon: React.ComponentType<{ className?: string }> }> = [
+  { id: 'main', label: 'Mind', icon: Brain },
+  { id: 'depth', label: 'Depth', icon: Gauge },
+  { id: 'network', label: 'Network', icon: Network },
+  { id: 'resonance', label: 'Resonance', icon: Waves },
+];
+
 const Think: React.FC = () => {
+  const [influences, setInfluences] = useState<Record<string, number>>({});
+  const [activeView, setActiveView] = useState<ThinkView>('main');
+  const [paused, setPaused] = useState(false);
+  const [speed, setSpeed] = useState(1);
+
   const {
     consciousness,
     currentThought,
@@ -21,146 +36,151 @@ const Think: React.FC = () => {
     handleStateTransition,
     handleEntropyChange,
     handleThoughtGenerated,
-    formatTime
-  } = useConsciousness();
+    formatTime,
+  } = useConsciousness({ paused, speed });
 
-  const [influences, setInfluences] = useState<Record<string, number>>({});
-  const [activeView, setActiveView] = useState<'main' | 'depth' | 'network' | 'resonance'>('main');
+  const renderView = () => {
+    if (activeView === 'main') {
+      return (
+        <ConsciousnessDisplay
+          consciousness={consciousness}
+          currentThought={currentThought}
+          currentSymbols={currentSymbols}
+          formatTime={formatTime}
+          isPaused={paused}
+        />
+      );
+    }
 
-  const handleInfluenceChange = (newInfluences: Record<string, number>) => {
-    setInfluences(newInfluences);
-    // Apply influences to the thinking process
-    console.log('Thought influences updated:', newInfluences);
+    if (activeView === 'depth') {
+      return (
+        <div className="grid min-h-[620px] place-items-center p-4 sm:p-8">
+          <Card className="h-[540px] w-full max-w-5xl border-cyan-300/25 bg-slate-950/80 backdrop-blur-sm">
+            <ConsciousnessDepthVisualizer consciousness={consciousness} className="h-full w-full" />
+          </Card>
+        </div>
+      );
+    }
+
+    if (activeView === 'network') {
+      return (
+        <div className="min-h-[620px] p-4 sm:p-8">
+          <Card className="h-[620px] w-full border-cyan-300/25 bg-slate-950/80 backdrop-blur-sm">
+            <MathematicalConceptNetwork consciousness={consciousness} influences={influences} className="h-full w-full" />
+          </Card>
+        </div>
+      );
+    }
+
+    return (
+      <div className="min-h-[620px] p-4 sm:p-8">
+        <Card className="h-[620px] w-full border-cyan-300/25 bg-slate-950/80 backdrop-blur-sm">
+          <ThoughtResonanceSystem thoughts={consciousness.thoughtStream} entropy={consciousness.entropy} className="h-full w-full" />
+        </Card>
+      </div>
+    );
   };
 
   return (
-    <div className="touch-none select-none min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800">
-      {/* Core Logic Components */}
-      <CosmologyEngine 
+    <div className="relative min-h-[calc(100vh-4.25rem)] overflow-hidden bg-slate-950">
+      <CosmologyEngine
         onStateTransition={handleStateTransition}
         onEntropyChange={handleEntropyChange}
+        paused={paused}
+        speed={speed}
       />
-      
-      <SelfModifyingKernel 
+      <SelfModifyingKernel
         currentState={consciousness.currentState}
         entropy={consciousness.entropy}
         onThoughtGenerated={handleThoughtGenerated}
         temporalDrift={consciousness.temporalDrift}
+        paused={paused}
+        speed={speed}
       />
 
-      {/* Enhanced Interface with Novel Features */}
-      <div className="relative min-h-screen">
-        {/* Main View Toggle */}
-        <div className="absolute top-4 left-4 z-30">
-          <Card className="bg-slate-900/90 backdrop-blur-sm border-purple-500/30">
-            <Tabs value={activeView} onValueChange={(value) => setActiveView(value as any)} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 bg-slate-800">
-                <TabsTrigger value="main" className="text-xs">Mind</TabsTrigger>
-                <TabsTrigger value="depth" className="text-xs">Depth</TabsTrigger>
-                <TabsTrigger value="network" className="text-xs">Network</TabsTrigger>
-                <TabsTrigger value="resonance" className="text-xs">Resonance</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </Card>
+      <div className="relative z-30 border-b border-white/10 bg-black/35 px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Ambient thinking mode</p>
+            <h1 className="mt-1 text-2xl font-semibold text-white">Watch the system think, then turn the useful thought into a conjecture.</h1>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {views.map((view) => {
+              const Icon = view.icon;
+              const active = activeView === view.id;
+              return (
+                <button
+                  key={view.id}
+                  type="button"
+                  onClick={() => setActiveView(view.id)}
+                  className={`inline-flex min-h-10 items-center gap-2 rounded-md border px-3 text-sm transition ${
+                    active ? 'border-cyan-300 bg-cyan-300 text-slate-950' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {view.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Dynamic View Content */}
-        {activeView === 'main' && (
-          <ConsciousnessDisplay 
-            consciousness={consciousness}
-            currentThought={currentThought}
-            currentSymbols={currentSymbols}
-            formatTime={formatTime}
-            isPaused={false}
-          />
-        )}
-
-        {activeView === 'depth' && (
-          <div className="min-h-screen flex items-center justify-center p-8">
-            <Card className="w-full max-w-4xl h-96 bg-slate-900/70 backdrop-blur-sm border-purple-500/30">
-              <ConsciousnessDepthVisualizer 
-                consciousness={consciousness}
-                className="w-full h-full"
-              />
-            </Card>
-          </div>
-        )}
-
-        {activeView === 'network' && (
-          <div className="min-h-screen p-8">
-            <Card className="w-full h-full bg-slate-900/70 backdrop-blur-sm border-purple-500/30">
-              <MathematicalConceptNetwork 
-                consciousness={consciousness}
-                influences={influences}
-                className="w-full h-full"
-              />
-            </Card>
-          </div>
-        )}
-
-        {activeView === 'resonance' && (
-          <div className="min-h-screen p-8">
-            <Card className="w-full h-full bg-slate-900/70 backdrop-blur-sm border-purple-500/30">
-              <ThoughtResonanceSystem 
-                thoughts={consciousness.thoughtStream}
-                entropy={consciousness.entropy}
-                className="w-full h-full"
-              />
-            </Card>
-          </div>
-        )}
-
-        {/* Thought Influence System - Always Visible */}
-        <ThoughtInfluenceSystem 
-          onInfluenceChange={handleInfluenceChange}
-          currentEntropy={consciousness.entropy}
-        />
-
-        {/* Enhanced Status Indicator */}
-        <div className="fixed top-4 right-4 z-20">
-          <Card className="bg-slate-900/90 backdrop-blur-sm border-purple-500/30 p-3">
-            <div className="text-xs text-purple-300 space-y-1">
-              <div className="flex items-center space-x-2">
-                <div className={`w-2 h-2 rounded-full animate-pulse ${
-                  consciousness.entropy > 10 ? 'bg-red-400' : 
-                  consciousness.entropy > 5 ? 'bg-yellow-400' : 'bg-green-400'
-                }`} />
-                <span>State: {consciousness.currentState}</span>
+        <div className="mx-auto mt-4 grid max-w-7xl gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="grid gap-3 sm:grid-cols-4">
+            {[
+              ['State', consciousness.currentState],
+              ['Entropy', consciousness.entropy.toFixed(1)],
+              ['Depth', consciousness.cognitiveDepth.toFixed(2)],
+              ['Time', formatTime(consciousness.timeRunning)],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-md border border-white/10 bg-white/[0.04] p-3">
+                <p className="text-xs uppercase tracking-[0.14em] text-slate-500">{label}</p>
+                <p className="mt-1 truncate font-mono text-sm text-white">{value}</p>
               </div>
-              <div>Entropy: {consciousness.entropy.toFixed(1)}</div>
-              <div>Depth: {consciousness.cognitiveDepth.toFixed(2)}</div>
-              <div>Awareness: {(consciousness.selfAwareness * 100).toFixed(1)}%</div>
-              <div>Time: {formatTime(consciousness.timeRunning)}</div>
-            </div>
-          </Card>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+              onClick={() => setPaused((value) => !value)}
+            >
+              {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+              {paused ? 'Resume' : 'Pause'}
+            </Button>
+            {[0.5, 1, 2].map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setSpeed(option)}
+                className={`min-h-10 rounded-md border px-3 text-sm transition ${
+                  speed === option ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {option}x
+              </button>
+            ))}
+            <Button asChild className="bg-lime-300 text-slate-950 hover:bg-lime-200">
+              <Link to="/collaborator" state={{ initialQuery: currentThought }}>
+                Send to workspace
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
+      </div>
 
-        {/* Novel Feature Indicators */}
-        <div className="fixed bottom-4 left-4 z-20">
-          <Card className="bg-slate-900/90 backdrop-blur-sm border-purple-500/30 p-2">
-            <div className="text-xs text-purple-300 space-y-1">
-              <div className="flex items-center space-x-2">
-                <span className="animate-pulse">🧠</span>
-                <span>Novel AI Consciousness</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="animate-bounce">⚡</span>
-                <span>Interactive Influence System</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="animate-spin">🌀</span>
-                <span>3D Depth Visualization</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="animate-pulse">🕸️</span>
-                <span>Mathematical Network</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="animate-pulse">🌊</span>
-                <span>Thought Resonance</span>
-              </div>
-            </div>
-          </Card>
+      {renderView()}
+
+      <ThoughtInfluenceSystem onInfluenceChange={setInfluences} currentEntropy={consciousness.entropy} />
+
+      <div className="fixed bottom-4 left-4 z-30 hidden rounded-lg border border-white/10 bg-slate-950/85 p-3 text-xs text-slate-300 shadow-2xl shadow-black/40 backdrop-blur-xl sm:block">
+        <div className="flex items-center gap-2 text-cyan-100">
+          <Radio className="h-4 w-4" />
+          Thought stream can now feed the conjecture workspace.
         </div>
       </div>
     </div>

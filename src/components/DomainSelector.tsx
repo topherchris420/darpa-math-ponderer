@@ -1,87 +1,67 @@
-
 import React from 'react';
 import { Book, Grid3x3, Infinity as InfinityIcon, Triangle } from 'lucide-react';
-
-interface Domain {
-  id: string;
-  name: string;
-  description: string;
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
-}
+import { DOMAIN_PROFILES } from '@/lib/mathLabCore.js';
 
 interface DomainSelectorProps {
   activeDomain: string;
   onDomainChange: (domain: string) => void;
 }
 
-export const DomainSelector: React.FC<DomainSelectorProps> = ({
-  activeDomain,
-  onDomainChange
-}) => {
-  const domains: Domain[] = [
-    {
-      id: 'topology',
-      name: 'Topology',
-      description: 'Study of spatial properties preserved under continuous deformations',
-      icon: InfinityIcon,
-      color: 'purple'
-    },
-    {
-      id: 'number-theory',
-      name: 'Number Theory',
-      description: 'Properties and relationships of integers and rational numbers',
-      icon: Grid3x3,
-      color: 'blue'
-    },
-    {
-      id: 'combinatorics',
-      name: 'Combinatorics',
-      description: 'Counting, arrangement, and optimization of discrete structures',
-      icon: Triangle,
-      color: 'green'
-    },
-    {
-      id: 'algebraic-geometry',
-      name: 'Algebraic Geometry',
-      description: 'Geometric study of solutions to polynomial equations',
-      icon: Book,
-      color: 'orange'
-    }
-  ];
+const domainIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  topology: InfinityIcon,
+  'number-theory': Grid3x3,
+  combinatorics: Triangle,
+  'algebraic-geometry': Book,
+};
 
-  const getColorClasses = (color: string, isActive: boolean) => {
-    const colorMap = {
-      purple: isActive ? 'bg-purple-600 border-purple-400 text-white' : 'bg-purple-900/30 border-purple-500/30 text-purple-200 hover:bg-purple-800/40',
-      blue: isActive ? 'bg-blue-600 border-blue-400 text-white' : 'bg-blue-900/30 border-blue-500/30 text-blue-200 hover:bg-blue-800/40',
-      green: isActive ? 'bg-green-600 border-green-400 text-white' : 'bg-green-900/30 border-green-500/30 text-green-200 hover:bg-green-800/40',
-      orange: isActive ? 'bg-orange-600 border-orange-400 text-white' : 'bg-orange-900/30 border-orange-500/30 text-orange-200 hover:bg-orange-800/40'
-    };
-    return colorMap[color as keyof typeof colorMap] || colorMap.purple;
-  };
+const tones = ['cyan', 'lime', 'amber', 'rose'] as const;
+
+export const DomainSelector: React.FC<DomainSelectorProps> = ({ activeDomain, onDomainChange }) => {
+  const domains = Object.values(DOMAIN_PROFILES);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {domains.map((domain) => {
-        const Icon = domain.icon;
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      {domains.map((domain, index) => {
+        const Icon = domainIcons[domain.id] ?? InfinityIcon;
         const isActive = activeDomain === domain.id;
-        
+        const tone = tones[index % tones.length];
+
         return (
           <button
             key={domain.id}
+            type="button"
             onClick={() => onDomainChange(domain.id)}
-            className={`p-4 rounded-lg border transition-all duration-300 ${getColorClasses(domain.color, isActive)}`}
+            className={`min-h-[154px] rounded-lg border p-4 text-left transition ${
+              isActive
+                ? 'border-cyan-300 bg-cyan-300 text-slate-950 shadow-lg shadow-cyan-950/30'
+                : 'border-white/10 bg-white/[0.04] text-slate-300 hover:border-white/25 hover:bg-white/[0.07]'
+            }`}
           >
-            <div className="flex flex-col items-center space-y-2">
-              <Icon className="w-8 h-8" />
-              <h3 className="font-medium text-sm">{domain.name}</h3>
-              <p className="text-xs opacity-80 text-center leading-tight">
-                {domain.description}
-              </p>
+            <div className="flex items-start justify-between gap-3">
+              <Icon className={`h-5 w-5 ${isActive ? 'text-slate-950' : toneClass(tone)}`} />
+              <span className={`rounded-md border px-2 py-1 text-xs ${isActive ? 'border-slate-950/20 bg-slate-950/10' : 'border-white/10 bg-black/20 text-slate-400'}`}>
+                {String(index + 1).padStart(2, '0')}
+              </span>
             </div>
+            <h3 className="mt-4 font-semibold">{domain.label}</h3>
+            <p className={`mt-2 text-sm leading-6 ${isActive ? 'text-slate-800' : 'text-slate-400'}`}>{domain.tagline}</p>
           </button>
         );
       })}
     </div>
   );
+};
+
+const toneClass = (tone: (typeof tones)[number]) => {
+  switch (tone) {
+    case 'lime':
+      return 'text-lime-200';
+    case 'amber':
+      return 'text-amber-200';
+    case 'rose':
+      return 'text-rose-200';
+    case 'cyan':
+    default:
+      return 'text-cyan-200';
+  }
 };

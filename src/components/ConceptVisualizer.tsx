@@ -80,6 +80,7 @@ export const ConceptVisualizer: React.FC<ConceptVisualizerProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- ConceptVisualizer stable animation dependencies
   }, [concepts, activeDomain, dimensions]);
 
   const drawConceptNetwork = (ctx: CanvasRenderingContext2D, concepts: MathematicalConcept[], time: number) => {
@@ -189,7 +190,7 @@ export const ConceptVisualizer: React.FC<ConceptVisualizerProps> = ({
         }
         break;
 
-      case 'combinatorics':
+      case 'combinatorics': {
         // Draw graph structures and combinatorial patterns
         const vertices = 8;
         const graphRadius = 100;
@@ -211,6 +212,7 @@ export const ConceptVisualizer: React.FC<ConceptVisualizerProps> = ({
           }
         }
         break;
+      }
 
       case 'algebraic-geometry':
         // Draw algebraic curves and geometric patterns

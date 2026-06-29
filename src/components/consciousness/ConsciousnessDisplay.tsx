@@ -23,7 +23,7 @@ export const ConsciousnessDisplay: React.FC<ConsciousnessDisplayProps> = ({
   isPaused = false
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 overflow-hidden relative">
+    <div className="min-h-[calc(100vh-4.25rem)] bg-slate-950 overflow-hidden relative">
       {/* Ambient Audio */}
       <AmbientAudio 
         model={consciousness.currentState} 
@@ -46,7 +46,7 @@ export const ConsciousnessDisplay: React.FC<ConsciousnessDisplayProps> = ({
       </div>
 
       {/* Mobile-Optimized Consciousness Interface Overlay */}
-      <div className="relative z-20 min-h-screen flex flex-col justify-between p-4 sm:p-6 md:p-8">
+      <div className="relative z-20 min-h-[calc(100vh-4.25rem)] flex flex-col justify-between p-4 sm:p-6 md:p-8">
         {/* Top Metrics - Hidden on small screens */}
         <div className="hidden sm:block">
           <ConsciousnessMetrics 

@@ -6,6 +6,21 @@ interface AmbientAudioProps {
   depth: number;
 }
 
+const audioAvailability = new Map<string, Promise<boolean>>();
+
+const hasAudioAsset = (src: string) => {
+  if (!audioAvailability.has(src)) {
+    audioAvailability.set(
+      src,
+      fetch(src, { method: 'HEAD' })
+        .then((response) => response.ok)
+        .catch(() => false)
+    );
+  }
+
+  return audioAvailability.get(src)!;
+};
+
 export const AmbientAudio: React.FC<AmbientAudioProps> = ({ model, depth }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -13,8 +28,9 @@ export const AmbientAudio: React.FC<AmbientAudioProps> = ({ model, depth }) => {
     const audioElement = audioRef.current;
     if (!audioElement) return;
 
-    const updateAudio = () => {
-      // Adjust audio parameters based on the model and depth
+    let cancelled = false;
+
+    const updateAudio = async () => {
       let src = '';
       let volume = 0.1 + depth * 0.02;
       let playbackRate = 0.8 + depth * 0.01;
@@ -42,24 +58,24 @@ export const AmbientAudio: React.FC<AmbientAudioProps> = ({ model, depth }) => {
           break;
       }
 
+      const assetExists = await hasAudioAsset(src);
+      if (cancelled || !assetExists) return;
+
       audioElement.src = src;
       audioElement.volume = Math.min(1.0, volume);
       audioElement.playbackRate = playbackRate;
       audioElement.loop = true;
 
-      audioElement.play().catch(error => {
-        console.error("Playback failed:", error);
-      });
+      await audioElement.play().catch(() => undefined);
     };
 
     updateAudio();
 
     return () => {
+      cancelled = true;
       audioElement.pause();
     };
   }, [model, depth]);
 
-  return (
-    <audio ref={audioRef} preload="auto" />
-  );
+  return <audio ref={audioRef} preload="auto" />;
 };
