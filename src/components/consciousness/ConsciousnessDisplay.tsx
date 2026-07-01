@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CosmicCanvas } from '../CosmicCanvas';
 import { AmbientAudio } from '../AmbientAudio';
@@ -48,7 +47,7 @@ export const ConsciousnessDisplay: React.FC<ConsciousnessDisplayProps> = ({
       {/* Mobile-Optimized Consciousness Interface Overlay */}
       <div className="relative z-20 min-h-[calc(100vh-4.25rem)] flex flex-col justify-between p-4 sm:p-6 md:p-8">
         {/* Top Metrics - Hidden on small screens */}
-        <div className="hidden sm:block">
+        <div className="hidden md:block">
           <ConsciousnessMetrics 
             consciousness={consciousness}
             formatTime={formatTime}
@@ -64,10 +63,12 @@ export const ConsciousnessDisplay: React.FC<ConsciousnessDisplayProps> = ({
         />
 
         {/* Bottom Metrics - Simplified on mobile */}
-        <ConsciousnessMetrics 
-          consciousness={consciousness}
-          formatTime={formatTime}
-        />
+        <div className="block md:hidden">
+          <ConsciousnessMetrics 
+            consciousness={consciousness}
+            formatTime={formatTime}
+          />
+        </div>
       </div>
     </div>
   );
