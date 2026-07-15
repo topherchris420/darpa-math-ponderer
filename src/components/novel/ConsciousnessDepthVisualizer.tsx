@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ConsciousnessState } from '../../types/consciousness';
 
 interface DepthLayer {
@@ -20,16 +20,25 @@ export const ConsciousnessDepthVisualizer: React.FC<ConsciousnessDepthVisualizer
   className = ""
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [depthLayers, setDepthLayers] = useState<DepthLayer[]>([]);
   const animationRef = useRef<number>();
+  // Layers regenerate every second as cognitive depth grows; keeping them in a
+  // ref lets the render loop pick up changes without restarting and losing its
+  // rotation phase.
+  const layersRef = useRef<DepthLayer[]>([]);
+  const selfAwarenessRef = useRef(consciousness.selfAwareness);
+
+  const layerCount = Math.min(Math.floor(consciousness.cognitiveDepth * 2), 10);
+
+  useEffect(() => {
+    selfAwarenessRef.current = consciousness.selfAwareness;
+  }, [consciousness.selfAwareness]);
 
   useEffect(() => {
     // Generate depth layers based on consciousness depth
     const layers: DepthLayer[] = [];
-    const maxDepth = Math.min(Math.floor(consciousness.cognitiveDepth * 2), 10);
-    
-    for (let i = 0; i < maxDepth; i++) {
-      const depth = i / maxDepth;
+
+    for (let i = 0; i < layerCount; i++) {
+      const depth = i / layerCount;
       layers.push({
         depth: depth,
         thoughts: consciousness.thoughtStream.slice(-5 * (i + 1), -5 * i || undefined),
@@ -38,9 +47,9 @@ export const ConsciousnessDepthVisualizer: React.FC<ConsciousnessDepthVisualizer
         rotation: depth * Math.PI * 0.2
       });
     }
-    
-    setDepthLayers(layers);
-  }, [consciousness.cognitiveDepth, consciousness.thoughtStream]);
+
+    layersRef.current = layers;
+  }, [layerCount, consciousness.thoughtStream]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -59,18 +68,18 @@ export const ConsciousnessDepthVisualizer: React.FC<ConsciousnessDepthVisualizer
 
     const animate = () => {
       ctx.clearRect(0, 0, rect.width, rect.height);
-      
+
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
       // Draw consciousness depth layers
-      depthLayers.forEach((layer, index) => {
+      layersRef.current.forEach((layer, index) => {
         ctx.save();
-        
+
         // Apply 3D perspective transformation
         const perspective = 1 - layer.depth * 0.5;
         const offsetY = layer.depth * 30;
-        
+
         ctx.globalAlpha = layer.opacity * (0.8 + Math.sin(time + index) * 0.2);
         ctx.translate(centerX, centerY + offsetY);
         ctx.scale(layer.scale * perspective, layer.scale * perspective);
@@ -82,7 +91,7 @@ export const ConsciousnessDepthVisualizer: React.FC<ConsciousnessDepthVisualizer
         gradient.addColorStop(0, `rgba(168, 85, 247, ${0.1 * layer.opacity})`);
         gradient.addColorStop(0.7, `rgba(147, 51, 234, ${0.3 * layer.opacity})`);
         gradient.addColorStop(1, `rgba(126, 34, 206, ${0.1 * layer.opacity})`);
-        
+
         ctx.strokeStyle = gradient;
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -94,17 +103,17 @@ export const ConsciousnessDepthVisualizer: React.FC<ConsciousnessDepthVisualizer
           ctx.fillStyle = `rgba(192, 132, 252, ${layer.opacity * 0.8})`;
           ctx.font = `${8 + index * 2}px monospace`;
           ctx.textAlign = 'center';
-          
+
           layer.thoughts.slice(0, 3).forEach((thought, thoughtIndex) => {
             const angle = (thoughtIndex / 3) * Math.PI * 2 + time * 0.2;
             const thoughtRadius = radius * 0.7;
             const x = Math.cos(angle) * thoughtRadius;
             const y = Math.sin(angle) * thoughtRadius;
-            
+
             // Extract key words from thought
             const words = thought.split(' ').filter(word => word.length > 4).slice(0, 2);
             const displayText = words.join(' ');
-            
+
             if (displayText) {
               // Add subtle glow effect
               ctx.shadowColor = 'rgba(168, 85, 247, 0.5)';
@@ -134,27 +143,27 @@ export const ConsciousnessDepthVisualizer: React.FC<ConsciousnessDepthVisualizer
       const coreGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 30);
       coreGradient.addColorStop(0, `rgba(168, 85, 247, ${0.8 + Math.sin(time * 2) * 0.2})`);
       coreGradient.addColorStop(1, 'rgba(168, 85, 247, 0)');
-      
+
       ctx.fillStyle = coreGradient;
       ctx.beginPath();
       ctx.arc(0, 0, 20 + Math.sin(time * 3) * 5, 0, Math.PI * 2);
       ctx.fill();
-      
+
       // Core pulse
       ctx.strokeStyle = `rgba(192, 132, 252, ${0.6 + Math.sin(time * 4) * 0.4})`;
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(0, 0, 15 + Math.sin(time * 5) * 8, 0, Math.PI * 2);
       ctx.stroke();
-      
+
       ctx.restore();
 
       // Draw self-awareness indicator
-      const awarenessSize = consciousness.selfAwareness * 100;
-      ctx.fillStyle = `rgba(255, 215, 0, ${consciousness.selfAwareness * 0.7})`;
+      const selfAwareness = selfAwarenessRef.current;
+      ctx.fillStyle = `rgba(255, 215, 0, ${selfAwareness * 0.7})`;
       ctx.font = '12px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText(`◊ ${(consciousness.selfAwareness * 100).toFixed(1)}%`, centerX, 30);
+      ctx.fillText(`◊ ${(selfAwareness * 100).toFixed(1)}%`, centerX, 30);
 
       time += 0.02;
       animationRef.current = requestAnimationFrame(animate);
@@ -167,7 +176,7 @@ export const ConsciousnessDepthVisualizer: React.FC<ConsciousnessDepthVisualizer
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [depthLayers, consciousness.selfAwareness]);
+  }, []);
 
   return (
     <div className={`relative ${className}`}>
@@ -176,14 +185,14 @@ export const ConsciousnessDepthVisualizer: React.FC<ConsciousnessDepthVisualizer
         className="w-full h-full"
         style={{ width: '100%', height: '100%' }}
       />
-      
+
       {/* Depth Scale */}
       <div className="absolute top-2 left-2 text-xs text-purple-300 space-y-1">
         <div className="bg-slate-900/70 px-2 py-1 rounded">
           Depth: {consciousness.cognitiveDepth.toFixed(2)}
         </div>
         <div className="bg-slate-900/70 px-2 py-1 rounded">
-          Layers: {depthLayers.length}
+          Layers: {layerCount}
         </div>
       </div>
     </div>

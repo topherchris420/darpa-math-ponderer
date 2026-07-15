@@ -185,7 +185,7 @@ export function createResearchEntry({ title, activeDomain, query = '', conjectur
   const safeTitle = title?.trim() || `${getDomainProfile(activeDomain).label} session`;
 
   return {
-    id: `entry-${Date.now()}`,
+    id: `entry-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
     title: safeTitle,
     domain: getDomainProfile(activeDomain).id,
     query: query.trim(),

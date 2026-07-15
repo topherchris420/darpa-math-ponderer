@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { CosmicState } from '../types/consciousness';
 
 export type { CosmicState };
@@ -8,7 +8,6 @@ interface CosmologicalAttractor {
   entropy: number;
   semanticDensity: number;
   cognitiveWeight: number;
-  transitionProbabilities: Record<CosmicState, number>;
 }
 
 interface CosmologyEngineProps {
@@ -18,107 +17,86 @@ interface CosmologyEngineProps {
   speed?: number;
 }
 
+const COSMIC_STATES: CosmicState[] = ['finite-finite', 'finite-infinite', 'infinite-finite', 'infinite-infinite'];
+
+const ENTROPY_MIN = 0;
+const ENTROPY_MAX = 12;
+
 export const CosmologyEngine: React.FC<CosmologyEngineProps> = ({
   onStateTransition,
   onEntropyChange,
   paused = false,
   speed = 1,
 }) => {
-  const [currentAttractor, setCurrentAttractor] = useState<CosmologicalAttractor>({
+  // The attractor never drives rendering (this component returns null), so it
+  // lives in a ref and the simulation interval survives entropy churn intact.
+  const attractor = useRef<CosmologicalAttractor>({
     state: 'finite-finite',
     entropy: 0,
     semanticDensity: 1.0,
     cognitiveWeight: 1.0,
-    transitionProbabilities: {
-      'finite-finite': 0.25,
-      'finite-infinite': 0.25,
-      'infinite-finite': 0.25,
-      'infinite-infinite': 0.25,
-    },
   });
 
   const entropyAccumulator = useRef(0);
-  const thoughtHistory = useRef<string[]>([]);
   const transitionThreshold = useRef(15);
+
+  const callbacks = useRef({ onStateTransition, onEntropyChange });
+  useEffect(() => {
+    callbacks.current = { onStateTransition, onEntropyChange };
+  }, [onStateTransition, onEntropyChange]);
 
   useEffect(() => {
     if (paused) return;
 
+    const pickNextState = (current: CosmicState): CosmicState => {
+      const favored = COSMIC_STATES[(COSMIC_STATES.indexOf(current) + 1) % COSMIC_STATES.length];
+      const probabilities = COSMIC_STATES.map((state) => {
+        if (state === favored) return 0.4;
+        if (state === current) return 0.1;
+        return 0.25;
+      });
+
+      let random = Math.random();
+      for (let index = 0; index < COSMIC_STATES.length; index++) {
+        random -= probabilities[index];
+        if (random <= 0) return COSMIC_STATES[index];
+      }
+      return favored;
+    };
+
     const interval = setInterval(() => {
-      const thoughtComplexity = thoughtHistory.current.length * 0.2;
-      const repetitionPenalty = calculateRepetitionPenalty();
+      const current = attractor.current;
       const semanticDrift = Math.sin(Date.now() * 0.001) * 0.8;
-      const newEntropy = currentAttractor.entropy + thoughtComplexity - repetitionPenalty + semanticDrift;
+      const newEntropy = Math.max(ENTROPY_MIN, Math.min(ENTROPY_MAX, current.entropy + semanticDrift + 0.05));
 
       entropyAccumulator.current += newEntropy * 0.05;
 
       if (entropyAccumulator.current > transitionThreshold.current) {
-        initiateStateTransition();
+        const nextState = pickNextState(current.state);
         entropyAccumulator.current = 0;
         transitionThreshold.current = 10 + Math.random() * 15;
+
+        attractor.current = {
+          ...current,
+          state: nextState,
+          entropy: 0,
+        };
+
+        callbacks.current.onStateTransition(nextState, newEntropy);
+      } else {
+        attractor.current = {
+          ...current,
+          entropy: newEntropy,
+          semanticDensity: Math.max(0.1, current.semanticDensity + (Math.random() - 0.5) * 0.1),
+          cognitiveWeight: Math.max(0.5, current.cognitiveWeight + (Math.random() - 0.5) * 0.05),
+        };
       }
 
-      setCurrentAttractor((prev) => ({
-        ...prev,
-        entropy: newEntropy,
-        semanticDensity: Math.max(0.1, prev.semanticDensity + (Math.random() - 0.5) * 0.1),
-        cognitiveWeight: Math.max(0.5, prev.cognitiveWeight + (Math.random() - 0.5) * 0.05),
-      }));
-
-      onEntropyChange(newEntropy);
+      callbacks.current.onEntropyChange(attractor.current.entropy);
     }, Math.max(150, 500 / speed));
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Cosmology interval owns attractor transition cadence
-  }, [currentAttractor.entropy, onEntropyChange, paused, speed]);
-
-  const calculateRepetitionPenalty = (): number => {
-    const recentThoughts = thoughtHistory.current.slice(-10);
-    const uniqueThoughts = new Set(recentThoughts);
-    return (recentThoughts.length - uniqueThoughts.size) * 2;
-  };
-
-  const initiateStateTransition = () => {
-    const states: CosmicState[] = ['finite-finite', 'finite-infinite', 'infinite-finite', 'infinite-infinite'];
-    const currentStateIndex = states.indexOf(currentAttractor.state);
-    const nextStateIndex = (currentStateIndex + 1) % states.length;
-    const nextState = states[nextStateIndex];
-    const biasedProbabilities = { ...currentAttractor.transitionProbabilities };
-
-    biasedProbabilities[nextState] = 0.4;
-    biasedProbabilities[currentAttractor.state] = 0.1;
-    states
-      .filter((state) => state !== nextState && state !== currentAttractor.state)
-      .forEach((state) => {
-        biasedProbabilities[state] = 0.25;
-      });
-
-    const random = Math.random();
-    let cumulativeProbability = 0;
-
-    for (const [state, probability] of Object.entries(biasedProbabilities)) {
-      cumulativeProbability += probability;
-      if (random <= cumulativeProbability) {
-        const newState = state as CosmicState;
-        const newProbabilities = {
-          'finite-finite': 0.25,
-          'finite-infinite': 0.25,
-          'infinite-finite': 0.25,
-          'infinite-infinite': 0.25,
-        };
-
-        setCurrentAttractor((prev) => ({
-          ...prev,
-          state: newState,
-          transitionProbabilities: newProbabilities,
-          entropy: 0,
-        }));
-
-        onStateTransition(newState, currentAttractor.entropy);
-        break;
-      }
-    }
-  };
+  }, [paused, speed]);
 
   return null;
 };

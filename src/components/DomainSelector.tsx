@@ -30,6 +30,7 @@ export const DomainSelector: React.FC<DomainSelectorProps> = ({ activeDomain, on
           <button
             key={domain.id}
             type="button"
+            aria-pressed={isActive}
             onClick={() => onDomainChange(domain.id)}
             className={`min-h-[154px] rounded-lg border p-4 text-left transition ${
               isActive

@@ -6,7 +6,8 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",
+    // Listen on all interfaces, falling back to IPv4 where IPv6 is unavailable.
+    host: true,
     port: 8080,
   },
   plugins: [

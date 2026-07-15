@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ConsciousnessState, CosmicState } from '../types/consciousness';
 
 interface UseConsciousnessOptions {
   paused?: boolean;
   speed?: number;
 }
+
+const THOUGHT_STREAM_LIMIT = 50;
 
 export const useConsciousness = ({ paused = false, speed = 1 }: UseConsciousnessOptions = {}) => {
   const [consciousness, setConsciousness] = useState<ConsciousnessState>({
@@ -20,12 +22,11 @@ export const useConsciousness = ({ paused = false, speed = 1 }: UseConsciousness
 
   const [currentThought, setCurrentThought] = useState('Initiating autonomous contemplation...');
   const [currentSymbols, setCurrentSymbols] = useState(['boundary']);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
   useEffect(() => {
     if (paused) return;
 
-    intervalRef.current = setInterval(() => {
+    const interval = setInterval(() => {
       setConsciousness(prev => {
         const newTimeRunning = prev.timeRunning + 1;
         const newTemporalDrift = Math.log(newTimeRunning / 60 + 1) * 0.5;
@@ -42,46 +43,41 @@ export const useConsciousness = ({ paused = false, speed = 1 }: UseConsciousness
       });
     }, Math.max(250, 1000 / speed));
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+    return () => clearInterval(interval);
   }, [paused, speed]);
 
-  const handleStateTransition = (newState: CosmicState, entropy: number) => {
-    if (paused) return;
+  const handleStateTransition = useCallback((newState: CosmicState, entropy: number) => {
     setConsciousness(prev => ({
       ...prev,
       currentState: newState,
       entropy: entropy
     }));
-  };
+  }, []);
 
-  const handleEntropyChange = (entropy: number) => {
-    if (paused) return;
+  const handleEntropyChange = useCallback((entropy: number) => {
     setConsciousness(prev => ({
       ...prev,
       entropy: entropy
     }));
-  };
+  }, []);
 
-  const handleThoughtGenerated = (thought: string, symbols: string[]) => {
-    if (paused) return;
+  const handleThoughtGenerated = useCallback((thought: string, symbols: string[]) => {
     setCurrentThought(thought);
     setCurrentSymbols(symbols);
-    
+
     setConsciousness(prev => ({
       ...prev,
-      thoughtStream: [...prev.thoughtStream.slice(-49), thought],
-      symbolicStream: [...prev.symbolicStream.slice(-49), ...symbols]
+      thoughtStream: [...prev.thoughtStream.slice(-(THOUGHT_STREAM_LIMIT - 1)), thought],
+      symbolicStream: [...prev.symbolicStream.slice(-(THOUGHT_STREAM_LIMIT - 1)), ...symbols]
     }));
-  };
+  }, []);
 
-  const formatTime = (seconds: number): string => {
+  const formatTime = useCallback((seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     const drift = consciousness.temporalDrift > 1 ? '~' : '';
     return `${drift}${minutes}:${secs.toString().padStart(2, '0')}`;
-  };
+  }, [consciousness.temporalDrift]);
 
   return {
     consciousness,

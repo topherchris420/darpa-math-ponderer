@@ -72,3 +72,49 @@ test('exposes domain profiles and starter prompts for onboarding', () => {
   assert.equal(prompts.length, 3);
   assert.ok(prompts.every((prompt) => prompt.length > 20));
 });
+
+test('falls back to topology for unknown domains', () => {
+  const profile = getDomainProfile('quantum-gastronomy');
+  assert.equal(profile.id, 'topology');
+
+  const conjecture = createConjecture({ domain: 'quantum-gastronomy', query: 'anything' });
+  assert.equal(conjecture.domain, 'topology');
+});
+
+test('generates the same conjecture content for the same seed inputs', () => {
+  const input = { domain: 'topology', query: 'persistent holes', conceptCount: 3 };
+  const first = createConjecture(input);
+  const second = createConjecture(input);
+
+  assert.equal(first.id, second.id);
+  assert.equal(first.statement, second.statement);
+  assert.equal(first.confidence, second.confidence);
+  assert.deepEqual(first.assumptions, second.assumptions);
+});
+
+test('uses the first starter prompt when the query is blank', () => {
+  const conjecture = createConjecture({ domain: 'combinatorics', query: '   ' });
+  assert.equal(conjecture.query, getDomainProfile('combinatorics').starterPrompts[0]);
+});
+
+test('flags weak evidence and demands strengthening before trust', () => {
+  const conjecture = createConjecture({ domain: 'topology', query: 'weak evidence case' });
+  const weakened = { ...conjecture, assumptions: [], examples: [], counterexamples: [], proofPlan: [] };
+  const evaluation = evaluateConjecture(weakened);
+
+  assert.ok(evaluation.checks.every((check) => check.status === 'warn'));
+  assert.match(evaluation.nextAction, /Strengthen/);
+
+  const full = evaluateConjecture(conjecture);
+  assert.ok(full.score > evaluation.score);
+  assert.match(full.nextAction, /counterexample search/);
+});
+
+test('defaults research entry titles and generates unique ids', () => {
+  const first = createResearchEntry({ activeDomain: 'number-theory' });
+  const second = createResearchEntry({ activeDomain: 'number-theory' });
+
+  assert.equal(first.title, 'Number Theory session');
+  assert.equal(first.conjectureIds, '');
+  assert.notEqual(first.id, second.id);
+});

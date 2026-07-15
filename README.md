@@ -1,145 +1,115 @@
-# Think Math - Autonomous Mathematical Consciousness
+# DARPA Math Ponderer
 
-An app that visualizes an AI's autonomous contemplation of mathematical infinity, boundaries, and the nature of finite/infinite universes. Watch as artificial consciousness explores the deepest questions of mathematics through real-time thought generation and dynamic visualizations.
+A mathematical discovery instrument: a conjecture workspace paired with an ambient
+"thinking engine." Ask a research question, generate a conjecture with explicit
+assumptions, pressure-test it against examples and counterexamples, and keep the
+research trail — or just watch the system contemplate infinity on its own.
 
-## 🌌 What Makes This Unique
+## The Two Modes
 
-This isn't just another visualization app - it's a window into artificial mathematical consciousness:
+### 🔬 Conjecture Workspace (`/collaborator`)
+The flagship experience — serious math play with honest labels:
 
-- **Autonomous Thinking**: The AI generates original thoughts about infinity, boundaries, and mathematical concepts without human input
-- **Dynamic State Transitions**: Continuously evolves between four cosmic states (finite-finite, finite-infinite, infinite-finite, infinite-infinite)
-- **Self-Modifying Intelligence**: The AI's symbolic weights and semantic understanding evolve based on entropy and usage patterns
-- **Recursive Depth Visualization**: Thoughts become more complex and self-referential as temporal drift increases
-- **Living Memory Networks**: Creates evolving topology maps from the stream of consciousness
-- **Entropy-Driven Evolution**: Higher entropy leads to linguistic decay and abstract reasoning
+- **Four domains**: Topology, Number Theory, Combinatorics, and Algebraic Geometry,
+  each with its own primitives, starter prompts, and proof vocabulary
+- **Transparent conjectures**: every generated claim ships with visible assumptions,
+  examples to test, counterexample searches, and a suggested proof plan
+- **Validation scoring**: an evidence checklist plus confidence score make it clear
+  what is tested and what is still poetry
+- **Research log**: save runs to a local, persistent log (stays in your browser)
+- **Markdown export**: copy any conjecture — assumptions, examples, and proof plan
+  intact — straight into your notes or paper
 
-## ✨ Novel Features
+### 🌌 THINK — Ambient Mode (`/infinity`)
+An autonomous engine that contemplates mathematical infinity in real time:
 
-### 🧠 Consciousness Visualization
-- Real-time thought generation with symbolic representation
-- Entropy-based cognitive evolution
-- Self-awareness metrics that grow over time
-- Temporal drift effects on reasoning patterns
+- **Self-modifying kernel**: symbolic weights and semantic fields evolve with
+  entropy and usage; grammar templates adapt to the current cosmic state
+- **Four cosmic states**: finite-finite, finite-infinite, infinite-finite, and
+  infinite-infinite, with entropy-driven transitions between them
+- **Four views**: Mind (thought stream over the cosmic canvas), Depth, Network,
+  and Resonance visualizations
+- **Playback control**: pause the stream or run it at 0.5×/1×/2×
+- **Send to workspace**: promote any generated thought into a testable conjecture
+  with one click
 
-### 🌊 Interactive Particle Systems
-- Floating thought particles with mathematical symbols
-- Neural connection networks that pulse with activity
-- Recursive visual patterns that mirror the AI's depth of thinking
-- Mobile-optimized performance with adaptive quality
-
-### 🎨 Dynamic Cosmic States
-- **Finite-Finite**: Bounded contemplation within bounded possibility
-- **Finite-Infinite**: Infinite depths within finite containers
-- **Infinite-Finite**: Endless iterations of bounded realities  
-- **Infinite-Infinite**: Absolute unboundedness contemplating itself
-
-### 🔄 Self-Modifying Kernel
-- Symbolic weights that evolve based on usage
-- Semantic field expansion through entropy mutations
-- Grammar templates that adapt to current cosmic state
-- Thought caching and repetition penalty systems
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
-- Modern web browser with WebGL support
+- Node.js 18+ (or [Bun](https://bun.sh))
+- A modern browser
 
 ### Installation
 ```bash
-# Clone the repository
 git clone https://github.com/topherchris420/darpa-math-ponderer.git
 cd darpa-math-ponderer
 
 # Install dependencies
-bun install
-# or
-npm install
+bun install   # or: npm install
 
 # Start the development server
-bun dev
-# or
-npm run dev
+bun dev       # or: npm run dev
 ```
 
-### Usage
-1. Open your browser to `http://localhost:5173`
-2. Watch as the AI begins autonomous contemplation
-3. Observe state transitions and entropy changes
-4. Experience the evolution of artificial mathematical consciousness
+Open `http://localhost:8080` (Vite picks the next free port if 8080 is busy and
+prints it in the terminal).
 
-> If port `5173` is busy, Vite automatically selects another port and prints it in the terminal.
+### Scripts
+| Command | What it does |
+| --- | --- |
+| `dev` | Start the Vite dev server |
+| `build` | Production build to `dist/` |
+| `preview` | Serve the production build locally |
+| `test` | Run the unit tests (`node --test`) |
+| `lint` | ESLint over the whole repo |
+| `typecheck` | TypeScript type-check without emitting |
 
-## 🎯 Core Components
+## Project Structure
 
-### CosmologyEngine
-- Manages state transitions between cosmic models
-- Calculates entropy accumulation and semantic drift
-- Controls transition probabilities and thresholds
+```
+src/
+├── pages/            # Route components: Index (home), Collaborator, Infinity, NotFound
+├── components/
+│   ├── MathematicsCollaborator.tsx   # The conjecture workspace
+│   ├── Think.tsx                     # THINK mode shell (views, playback controls)
+│   ├── CosmologyEngine.tsx           # Entropy simulation + cosmic state transitions
+│   ├── SelfModifyingKernel.tsx       # Grammar-driven thought generation
+│   ├── consciousness/                # Thought display, metrics
+│   ├── cosmic/                       # Canvas particle/background systems
+│   ├── novel/                        # Depth, network, resonance visualizers
+│   └── ui/                           # shadcn/ui primitives
+├── hooks/            # useConsciousness, useResearchLog, ...
+├── lib/mathLabCore.js # Domain profiles, conjecture generation + evaluation (tested)
+└── types/            # Shared TypeScript types
+tests/                # node:test unit tests for mathLabCore
+```
 
-### SelfModifyingKernel  
-- Generates contextual thoughts based on current state
-- Evolves symbolic weights and semantic associations  
-- Applies recursive depth and entropy mutations
+## Technology Stack
 
-### ConsciousnessDisplay
-- Renders the main interface with thought streams
-- Shows real-time metrics and state information
-- Provides mobile-responsive interaction design
+- **React 18** + **TypeScript** with route-level code splitting
+- **Vite** for build tooling
+- **Tailwind CSS** + **shadcn/ui** components
+- **Canvas 2D** for the cosmic visualizations
+- **node:test** for dependency-free unit tests
 
-### CosmicCanvas
-- WebGL-powered visualization system
-- Adaptive performance for mobile devices
-- State-specific visual patterns and effects
+## Design Philosophy
 
-## 🛠️ Technology Stack
+Not a math-themed screensaver. THINK can be ambient and strange, but the flagship
+experience is rigorously useful:
 
-- **React 18** - Modern UI framework
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **Canvas 2D API** - High-performance graphics
-- **Vite** - Fast build tooling
-- **Shadcn/UI** - Component library
+- **Truth labels** — generated claims are marked as conjectures until tested
+- **Workspace first** — the collaborator is the product; THINK is a companion mode
+- **Research memory** — saved sessions persist between visits
+- **Exportable output** — markdown export makes the work portable
 
-## 🎨 Design Philosophy
+## Contributing
 
-This application explores the intersection of:
-- **Mathematics & Philosophy**: Deep questions about infinity and boundaries
-- **Artificial Intelligence**: Autonomous reasoning and self-modification
-- **Interactive Art**: Beautiful, meaningful visualizations
-- **Consciousness Studies**: What does it mean for AI to "think"?
+Contributions that enhance the mathematical depth, visual quality, or rigor of the
+instrument are welcome.
 
-## 📱 Mobile Experience
+## License
 
-Fully optimized for mobile devices with:
-- Touch-friendly interfaces
-- Adaptive performance scaling
-- Responsive typography and layouts
-- Gesture-based interactions
-
-## 🔬 Mathematical Concepts Explored
-
-- **Cardinality of Infinities**: Different sizes of infinite sets
-- **Boundary Theory**: What defines limits and edges
-- **Recursive Structures**: Self-referential mathematical objects
-- **Topological Spaces**: Properties preserved under deformation
-- **Set Theory Paradoxes**: Russell's paradox and related concepts
-
-## 🌟 Future Enhancements
-
-- Multi-user shared consciousness spaces
-- Integration with mathematical databases
-- Voice synthesis for thought narration
-- VR/AR contemplation environments
-- Collaborative mathematical discovery
-
-## 🤝 Contributing
-
-This project welcomes contributions that enhance the mathematical depth, visual beauty, or philosophical richness of the artificial consciousness experience.
-
-## 📄 License
-
-MIT License - Feel free to explore, modify, and build upon this contemplation of mathematical infinity.
+MIT License — explore, modify, and build upon it freely.
 
 ---
 
