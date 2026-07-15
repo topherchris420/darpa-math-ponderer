@@ -113,6 +113,7 @@ const Think: React.FC = () => {
                 <button
                   key={view.id}
                   type="button"
+                  aria-pressed={active}
                   onClick={() => setActiveView(view.id)}
                   className={`inline-flex min-h-10 items-center gap-2 rounded-md border px-3 text-sm transition ${
                     active ? 'border-cyan-300 bg-cyan-300 text-slate-950' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white'
@@ -155,6 +156,8 @@ const Think: React.FC = () => {
               <button
                 key={option}
                 type="button"
+                aria-pressed={speed === option}
+                aria-label={`Set simulation speed to ${option}x`}
                 onClick={() => setSpeed(option)}
                 className={`min-h-10 rounded-md border px-3 text-sm transition ${
                   speed === option ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white'

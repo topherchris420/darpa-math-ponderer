@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Brain, CheckCircle2, FileText, FlaskConical, Infinity, Network, Search, Terminal } from 'lucide-react';
 import { AppShell } from '@/components/AppShell';
 import { Badge } from '@/components/ui/badge';
@@ -29,23 +29,25 @@ const mockThoughts = [
 ];
 
 const Index = () => {
+  const navigate = useNavigate();
   const [prompt, setPrompt] = useState(examples[0]);
-  const [activeThought, setActiveThought] = useState(mockThoughts[0]);
   const [thoughtIndex, setThoughtIndex] = useState(0);
+  const activeThought = mockThoughts[thoughtIndex];
 
   // Cycle thoughts for the live contemplation stream ticker
   useEffect(() => {
     const timer = setInterval(() => {
-      setThoughtIndex((prev) => {
-        const next = (prev + 1) % mockThoughts.length;
-        setActiveThought(mockThoughts[next]);
-        return next;
-      });
+      setThoughtIndex((prev) => (prev + 1) % mockThoughts.length);
     }, 4000);
     return () => clearInterval(timer);
   }, []);
 
-  const labHref = `/collaborator?query=${encodeURIComponent(prompt.trim() || examples[0])}`;
+  const effectivePrompt = prompt.trim() || examples[0];
+  const labHref = `/collaborator?query=${encodeURIComponent(effectivePrompt)}`;
+
+  const openLab = () => {
+    navigate(labHref, { state: { initialQuery: effectivePrompt } });
+  };
 
   return (
     <AppShell eyebrow="Mathematical discovery instrument">
@@ -75,20 +77,27 @@ const Index = () => {
             <label htmlFor="home-prompt" className="text-xs uppercase tracking-widest font-mono text-cyan-300">
               Start with a research direction
             </label>
-            <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+            <form
+              className="mt-3 flex flex-col gap-3 sm:flex-row"
+              onSubmit={(event) => {
+                event.preventDefault();
+                openLab();
+              }}
+            >
               <Input
                 id="home-prompt"
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
                 className="h-12 border-white/10 bg-black/40 text-white placeholder:text-slate-500 focus-visible:ring-cyan-300 font-mono text-sm"
               />
-              <Button asChild className="h-12 bg-cyan-300 px-6 text-slate-950 hover:bg-cyan-200 font-medium transition duration-300 flex-shrink-0">
-                <Link to={labHref} state={{ initialQuery: prompt }}>
-                  Open lab
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+              <Button
+                type="submit"
+                className="h-12 bg-cyan-300 px-6 text-slate-950 hover:bg-cyan-200 font-medium transition duration-300 flex-shrink-0"
+              >
+                Open lab
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </div>
+            </form>
           </div>
 
           <div className="mt-5 flex flex-wrap gap-2">

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Clipboard, FileDown, FlaskConical, Plus, Save, Sparkles, Loader2 } from 'lucide-react';
 import { ConjectureCard } from '@/components/ConjectureCard';
@@ -51,8 +51,8 @@ export const MathematicsCollaborator: React.FC = () => {
   );
   
   const selectedConjecture = useMemo(() => {
-    return conjectures.find((conjecture) => conjecture.id === selectedConjectureId) ?? domainConjectures[0] ?? conjectures[0];
-  }, [conjectures, domainConjectures, selectedConjectureId]);
+    return domainConjectures.find((conjecture) => conjecture.id === selectedConjectureId) ?? domainConjectures[0] ?? null;
+  }, [domainConjectures, selectedConjectureId]);
   
   const selectedEvaluation = selectedConjecture ? evaluateConjecture(selectedConjecture) : null;
 
@@ -81,12 +81,18 @@ export const MathematicsCollaborator: React.FC = () => {
     });
   }, [activeDomain, profile]);
 
+  const pendingTimers = useRef<number[]>([]);
+  useEffect(() => {
+    const timers = pendingTimers.current;
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, []);
+
   const generateConjecture = (prompt = query) => {
     setIsGenerating(true);
     const trimmedPrompt = prompt.trim() || starterPrompts[0];
 
     // Artificial mathematical calculation delay
-    setTimeout(() => {
+    pendingTimers.current.push(window.setTimeout(() => {
       const conjecture = createConjecture({
         domain: activeDomain,
         query: trimmedPrompt,
@@ -98,7 +104,7 @@ export const MathematicsCollaborator: React.FC = () => {
       setQuery(trimmedPrompt);
       setIsGenerating(false);
       toast.success("Mathematical conjecture generated successfully!");
-    }, 850);
+    }, 850));
   };
 
   const saveRun = () => {
@@ -113,7 +119,7 @@ export const MathematicsCollaborator: React.FC = () => {
     addEntry(entry);
     setSaveState('Saved!');
     toast.success("Research trail saved to local log.");
-    setTimeout(() => setSaveState('Save run'), 1400);
+    pendingTimers.current.push(window.setTimeout(() => setSaveState('Save run'), 1400));
   };
 
   const copyMarkdown = async () => {
@@ -150,7 +156,7 @@ export const MathematicsCollaborator: React.FC = () => {
       toast.error("Failed to copy markdown.");
     }
 
-    window.setTimeout(() => setCopyState('Copy markdown'), 1400);
+    pendingTimers.current.push(window.setTimeout(() => setCopyState('Copy markdown'), 1400));
   };
 
   return (
