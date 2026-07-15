@@ -70,7 +70,7 @@ const Index = () => {
           </h1>
           
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 font-light">
-            A serious mathematical workspace equipped with an ambient thinking engine. Generate conjectures, inspect assumptions, search for counterexamples, and export clean research logs.
+            A next-gen mathematical space with an ambient AI reasoning engine. Explore ideas, generate conjectures, challenge assumptions, search for counterexamples, and document every insight in structured research logs.
           </p>
 
           <div className="mt-8 rounded-lg border border-white/10 bg-white/[0.03] p-5 backdrop-blur-sm shadow-xl">
