@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Brain, CheckCircle2, FileText, FlaskConical, Infinity, Network, Search, Terminal } from 'lucide-react';
 import { AppShell } from '@/components/AppShell';
+import { Reveal } from '@/components/Reveal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,19 +29,30 @@ const mockThoughts = [
   'Synthesizing homology loop invariants under continuous deformation maps...',
 ];
 
+const THOUGHT_INTERVAL = 4000;
+
 const Index = () => {
   const navigate = useNavigate();
   const [prompt, setPrompt] = useState(examples[0]);
   const [thoughtIndex, setThoughtIndex] = useState(0);
+  const [tick, setTick] = useState(0);
   const activeThought = mockThoughts[thoughtIndex];
 
   // Cycle thoughts for the live contemplation stream ticker
   useEffect(() => {
     const timer = setInterval(() => {
       setThoughtIndex((prev) => (prev + 1) % mockThoughts.length);
-    }, 4000);
+    }, THOUGHT_INTERVAL);
     return () => clearInterval(timer);
   }, []);
+
+  // Drives the ticker countdown bar without re-rendering the thought text
+  useEffect(() => {
+    const timer = setInterval(() => setTick((prev) => prev + 1), 100);
+    return () => clearInterval(timer);
+  }, []);
+
+  const cycleProgress = ((tick * 100) % THOUGHT_INTERVAL) / THOUGHT_INTERVAL;
 
   const effectivePrompt = prompt.trim() || examples[0];
   const labHref = `/collaborator?query=${encodeURIComponent(effectivePrompt)}`;
@@ -52,7 +64,7 @@ const Index = () => {
   return (
     <AppShell eyebrow="Mathematical discovery instrument">
       {/* Hero Section */}
-      <section className="relative overflow-hidden mx-auto grid min-h-[calc(100vh-4.25rem)] max-w-7xl content-center gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(420px,0.9fr)] lg:px-8">
+      <section className="relative mx-auto grid max-w-7xl content-center gap-8 overflow-hidden px-4 py-10 sm:gap-10 sm:px-6 lg:min-h-[calc(100vh-4.25rem)] lg:grid-cols-[minmax(0,1.1fr)_minmax(420px,0.9fr)] lg:px-8">
         {/* Dynamic backgrounds inside hero section */}
         <div className="aurora-bg absolute opacity-20 pointer-events-none" aria-hidden />
         <div className="grid-overlay absolute pointer-events-none" aria-hidden />
@@ -63,17 +75,17 @@ const Index = () => {
             Autonomous math lab active
           </Badge>
           
-          <h1 className="mt-6 max-w-4xl text-5xl font-light leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 max-w-4xl text-[clamp(2.5rem,9vw,4.5rem)] font-light leading-[1.05] tracking-tight text-white">
             Explore conjectures.<br />
             Test the edges.<br />
             <span className="bg-gradient-to-r from-cyan-300 via-cyan-200 to-lime-300 bg-clip-text text-transparent font-medium">Keep the trail.</span>
           </h1>
           
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 font-light">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 font-light sm:mt-6 sm:text-lg">
             A next-gen mathematical space with an ambient AI reasoning engine. Explore ideas, generate conjectures, challenge assumptions, search for counterexamples, and document every insight in structured research logs.
           </p>
 
-          <div className="mt-8 rounded-lg border border-white/10 bg-white/[0.03] p-5 backdrop-blur-sm shadow-xl">
+          <div className="hover-lift mt-8 rounded-lg border border-white/10 bg-white/[0.03] p-4 shadow-xl backdrop-blur-sm focus-within:border-cyan-300/40 sm:p-5">
             <label htmlFor="home-prompt" className="text-xs uppercase tracking-widest font-mono text-cyan-300">
               Start with a research direction
             </label>
@@ -88,25 +100,31 @@ const Index = () => {
                 id="home-prompt"
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
-                className="h-12 border-white/10 bg-black/40 text-white placeholder:text-slate-500 focus-visible:ring-cyan-300 font-mono text-sm"
+                className="h-12 border-white/10 bg-black/40 font-mono text-sm text-white transition duration-300 placeholder:text-slate-500 focus-visible:ring-cyan-300"
               />
               <Button
                 type="submit"
-                className="h-12 bg-cyan-300 px-6 text-slate-950 hover:bg-cyan-200 font-medium transition duration-300 flex-shrink-0"
+                className="group h-12 flex-shrink-0 bg-cyan-300 px-6 font-medium text-slate-950 transition duration-300 hover:bg-cyan-200 active:scale-[0.98]"
               >
                 Open lab
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
             </form>
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-2">
-            {examples.map((example) => (
+          <div className="-mx-4 mt-5 flex snap-x gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+            {examples.map((example, index) => (
               <button
                 key={example}
                 type="button"
                 onClick={() => setPrompt(example)}
-                className="rounded-md border border-white/5 bg-white/[0.02] px-3.5 py-2 text-left text-xs font-mono text-slate-400 transition duration-300 hover:border-cyan-300/30 hover:bg-white/[0.05] hover:text-white"
+                aria-pressed={prompt === example}
+                style={{ animationDelay: `${200 + index * 80}ms` }}
+                className={`min-h-11 flex-shrink-0 snap-start rounded-md border px-3.5 py-2 text-left font-mono text-xs transition duration-300 sm:flex-shrink ${
+                  prompt === example
+                    ? 'border-cyan-300/50 bg-cyan-300/10 text-white'
+                    : 'border-white/5 bg-white/[0.02] text-slate-400 hover:border-cyan-300/30 hover:bg-white/[0.05] hover:text-white'
+                }`}
               >
                 {example}
               </button>
@@ -130,7 +148,11 @@ const Index = () => {
               {workflow.map((item, index) => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.label} className="min-h-[140px] rounded-md border border-white/5 bg-black/30 p-4 hover:border-white/15 transition-all duration-300 group">
+                  <div
+                    key={item.label}
+                    style={{ animationDelay: `${250 + index * 90}ms` }}
+                    className="hover-lift group min-h-[132px] rounded-md border border-white/5 bg-black/30 p-4 hover:border-cyan-300/25"
+                  >
                     <div className="flex items-center justify-between gap-3">
                       <Icon className="h-5 w-5 text-cyan-300 group-hover:scale-110 transition duration-300" />
                       <span className="font-mono text-xs text-slate-500">{String(index + 1).padStart(2, '0')}</span>
@@ -144,7 +166,7 @@ const Index = () => {
           </div>
 
           {/* Live Thought Preview Ticker */}
-          <div className="rounded-lg border border-cyan-500/20 bg-cyan-950/10 p-5 shadow-xl relative overflow-hidden">
+          <div className="relative overflow-hidden rounded-lg border border-cyan-500/20 bg-cyan-950/10 p-5 shadow-xl">
             <div className="absolute top-3.5 right-4 flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
@@ -153,19 +175,25 @@ const Index = () => {
               <Terminal className="h-4 w-4 text-cyan-300" />
               <p className="text-xs uppercase tracking-[0.18em] text-cyan-400 font-mono">Live Contemplation Stream</p>
             </div>
-            <div className="mt-3 min-h-[3rem] flex items-center border-l-2 border-cyan-500/30 pl-4 bg-black/40 rounded py-2.5 px-3">
+            <div className="mt-3 flex min-h-[3.5rem] items-center rounded border-l-2 border-cyan-500/30 bg-black/40 px-3 py-2.5 pl-4">
               <p key={activeThought} className="text-xs font-mono text-slate-300 leading-relaxed animate-fade-in-up">
                 {activeThought}
               </p>
+            </div>
+            <div className="mt-3 h-0.5 w-full overflow-hidden rounded-full bg-white/5" aria-hidden>
+              <div
+                className="h-full origin-left bg-cyan-400/60"
+                style={{ transform: `scaleX(${cycleProgress})` }}
+              />
             </div>
           </div>
         </div>
       </section>
 
       {/* Info Section */}
-      <section className="relative border-y border-white/10 bg-black/30 px-4 py-16 sm:px-6 lg:px-8">
+      <section className="relative border-y border-white/10 bg-black/30 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-3 items-center">
-          <div className="lg:col-span-1">
+          <Reveal className="lg:col-span-1">
             <Badge variant="outline" className="border-amber-300/30 bg-amber-300/10 text-amber-100 font-mono">
               Workspace Paradigm
             </Badge>
@@ -173,7 +201,7 @@ const Index = () => {
             <p className="mt-4 leading-relaxed text-slate-300 font-light text-sm">
               THINK can still be ambient and strange, but the flagship experience is rigorously useful: every generated idea has explicit assumptions, examples, and active proof plans.
             </p>
-          </div>
+          </Reveal>
           
           <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
             {[
@@ -181,35 +209,44 @@ const Index = () => {
               ['Truth Labels', 'Generated claims are marked as conjectures until users test them.'],
               ['Research Memory', 'Saved sessions keep the app from resetting to zero every visit.'],
               ['Exportable Output', 'Markdown export makes the work portable into notes or papers.'],
-            ].map(([title, body]) => (
-              <div key={title} className="rounded-lg border border-white/5 bg-white/[0.02] p-5 hover:bg-white/[0.04] transition duration-300">
-                <CheckCircle2 className="h-5 w-5 text-lime-300" />
+            ].map(([title, body], index) => (
+              <Reveal
+                key={title}
+                delay={index * 90}
+                className="hover-lift group rounded-lg border border-white/5 bg-white/[0.02] p-5 hover:border-lime-300/25 hover:bg-white/[0.04]"
+              >
+                <CheckCircle2 className="h-5 w-5 text-lime-300 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="mt-3 text-base font-semibold text-white tracking-wide">{title}</h3>
                 <p className="mt-1.5 text-xs leading-relaxed text-slate-400 font-light">{body}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* Mode Trait CTA */}
-      <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-16 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+      <Reveal
+        as="section"
+        className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16 lg:flex-row lg:items-center lg:justify-between lg:px-8"
+      >
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-slate-500 font-mono">Two modes, one trail</p>
-          <h2 className="mt-2 text-3xl font-light text-white tracking-wide">Collaborate when you need rigor. Think when you need motion.</h2>
+          <h2 className="mt-2 text-[clamp(1.6rem,5vw,2rem)] font-light leading-snug tracking-wide text-white">
+            Collaborate when you need rigor. Think when you need motion.
+          </h2>
         </div>
-        <div className="flex flex-col gap-3 sm:flex-row flex-shrink-0">
-          <Button asChild className="h-11 bg-cyan-300 text-slate-950 hover:bg-cyan-200 font-medium transition duration-300">
+        <div className="flex flex-shrink-0 flex-col gap-3 sm:flex-row">
+          <Button asChild className="h-12 bg-cyan-300 font-medium text-slate-950 transition duration-300 hover:bg-cyan-200 active:scale-[0.98]">
             <Link to="/collaborator">Open workspace</Link>
           </Button>
-          <Button asChild variant="outline" className="h-11 border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white transition duration-300">
+          <Button asChild variant="outline" className="h-12 border-white/15 bg-white/5 text-white transition duration-300 hover:bg-white/10 hover:text-white active:scale-[0.98]">
             <Link to="/infinity" className="flex items-center gap-2">
               <Network className="h-4 w-4 text-cyan-300" />
               Open THINK
             </Link>
           </Button>
         </div>
-      </section>
+      </Reveal>
     </AppShell>
   );
 };
