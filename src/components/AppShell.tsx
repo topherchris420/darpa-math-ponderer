@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Brain, FileText, Home, Infinity, Network } from 'lucide-react';
+import { useScrollProgress } from '@/hooks/useScrollProgress';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -14,18 +15,38 @@ const navItems = [
 ];
 
 export const AppShell: React.FC<AppShellProps> = ({ children, eyebrow = 'Conjecture workspace' }) => {
+  const { progress, condensed } = useScrollProgress();
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="lab-grid fixed inset-0" aria-hidden />
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-background/88 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <header
+        className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-300 ${
+          condensed ? 'border-white/10 bg-background/95 shadow-lg shadow-black/30' : 'border-white/5 bg-background/70'
+        }`}
+      >
+        <div
+          className={`mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 transition-all duration-300 sm:px-6 lg:px-8 ${
+            condensed ? 'py-2' : 'py-3'
+          }`}
+        >
           <Link to="/" className="flex min-w-0 items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-md border border-cyan-300/30 bg-cyan-300/10">
+            <span
+              className={`flex items-center justify-center rounded-md border border-cyan-300/30 bg-cyan-300/10 transition-all duration-300 ${
+                condensed ? 'h-8 w-8' : 'h-10 w-10'
+              }`}
+            >
               <Brain className="h-5 w-5 text-cyan-200" />
             </span>
             <span className="min-w-0 leading-tight">
               <span className="block truncate text-sm font-semibold tracking-wide text-white">DARPA Math Ponderer</span>
-              <span className="hidden text-xs uppercase tracking-[0.16em] text-slate-500 sm:block">{eyebrow}</span>
+              <span
+                className={`hidden overflow-hidden text-xs uppercase tracking-[0.16em] text-slate-500 transition-all duration-300 sm:block ${
+                  condensed ? 'max-h-0 opacity-0' : 'max-h-5 opacity-100'
+                }`}
+              >
+                {eyebrow}
+              </span>
             </span>
           </Link>
 
@@ -60,6 +81,11 @@ export const AppShell: React.FC<AppShellProps> = ({ children, eyebrow = 'Conject
             New run
           </Link>
         </div>
+        <div
+          className="h-0.5 origin-left bg-gradient-to-r from-cyan-300 via-cyan-200 to-lime-300 transition-transform duration-150 ease-out"
+          style={{ transform: `scaleX(${progress})` }}
+          aria-hidden
+        />
       </header>
       <main className="relative z-10">{children}</main>
     </div>

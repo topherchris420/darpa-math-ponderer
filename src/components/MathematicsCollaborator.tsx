@@ -160,10 +160,10 @@ export const MathematicsCollaborator: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 animate-fade-in-up">
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 animate-fade-in-up">
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-6">
-          <div className="rounded-lg border border-white/10 bg-white/[0.03] p-6 shadow-xl relative overflow-hidden">
+          <div className="relative overflow-hidden rounded-lg border border-white/10 bg-white/[0.03] p-5 shadow-xl sm:p-6">
             <div className="aurora-bg absolute opacity-10 pointer-events-none" aria-hidden />
             <Badge className="border border-lime-300/30 bg-lime-300/10 text-lime-100 hover:bg-lime-300/10 font-mono tracking-wider">
               <Sparkles className="mr-2 h-3.5 w-3.5 text-lime-300" />
@@ -171,7 +171,7 @@ export const MathematicsCollaborator: React.FC = () => {
             </Badge>
             <div className="mt-5 grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
               <div>
-                <h1 className="text-4xl font-light tracking-wide text-white sm:text-5xl">Conjecture lab for serious math play.</h1>
+                <h1 className="text-[clamp(2rem,7vw,3rem)] font-light leading-tight tracking-wide text-white">Conjecture lab for serious math play.</h1>
                 <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 font-light">
                   Ask a mathematical question, generate a conjecture, inspect assumptions, test examples, hunt counterexamples, and save the research trail.
                 </p>
