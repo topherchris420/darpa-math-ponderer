@@ -44,8 +44,15 @@ export const ThoughtDisplay: React.FC<ThoughtDisplayProps> = ({
 
   return (
     <div className="text-center space-y-4 sm:space-y-6 md:space-y-8 px-2 sm:px-4">
+      {/* Accessible announcements for the evolving monologue (visually hidden) */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {isPaused
+          ? 'Contemplation paused.'
+          : `${getStateTitle(consciousness.currentState)}. ${currentThought}`}
+      </div>
+
       <div className="space-y-2 sm:space-y-4">
-        <h2 className={`text-lg sm:text-xl md:text-2xl font-light text-white tracking-wide leading-tight ${isPaused ? 'opacity-50' : 'animate-pulse'}`}>
+        <h2 aria-hidden="true" className={`text-lg sm:text-xl md:text-2xl font-light text-white tracking-wide leading-tight ${isPaused ? 'opacity-50' : 'animate-pulse'}`}>
           {getStateTitle(consciousness.currentState)}
         </h2>
         <p className={`text-purple-200 text-sm sm:text-base md:text-lg font-light max-w-2xl mx-auto px-2 ${isPaused ? 'opacity-50' : ''}`}>
@@ -56,7 +63,7 @@ export const ThoughtDisplay: React.FC<ThoughtDisplayProps> = ({
       {/* Current Thought Display with Enhanced Mobile Dynamics */}
       <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4 md:space-y-6">
         {/* Animated Symbolic Pattern - Responsive sizing */}
-        <div className="text-center">
+        <div className="text-center" aria-hidden="true">
           <div className={`text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-4 text-purple-300 opacity-80 font-mono ${isPaused ? 'opacity-30' : 'animate-pulse'}`}>
             {currentSymbols.map((symbol, index) => (
               <span
@@ -76,7 +83,7 @@ export const ThoughtDisplay: React.FC<ThoughtDisplayProps> = ({
         </div>
 
         {/* Current Thought with Thinking Animation - Mobile optimized */}
-        <div className="text-white text-base sm:text-lg md:text-xl font-light leading-relaxed max-w-3xl mx-auto min-h-[3rem] sm:min-h-[4rem] flex items-center justify-center px-2">
+        <div aria-hidden="true" className="text-white text-base sm:text-lg md:text-xl font-light leading-relaxed max-w-3xl mx-auto min-h-[3rem] sm:min-h-[4rem] flex items-center justify-center px-2">
           <div className={`transition-all duration-1000 ${consciousness.entropy > 15 ? 'opacity-70 blur-sm' : 'opacity-100'} ${isPaused ? 'opacity-50' : ''}`}>
             <span className="inline-block text-center">
               {currentThought}
@@ -88,7 +95,7 @@ export const ThoughtDisplay: React.FC<ThoughtDisplayProps> = ({
         </div>
 
         {/* Enhanced Thought Stream History - Mobile optimized */}
-        <div className={`space-y-1 sm:space-y-2 opacity-60 max-h-32 sm:max-h-48 overflow-hidden ${isPaused ? 'opacity-30' : ''}`}>
+        <div aria-hidden="true" className={`space-y-1 sm:space-y-2 opacity-60 max-h-32 sm:max-h-48 overflow-hidden ${isPaused ? 'opacity-30' : ''}`}>
           {consciousness.thoughtStream.slice(-3).reverse().map((thought, index) => (
             <div 
               key={consciousness.thoughtStream.length - index}
@@ -108,7 +115,7 @@ export const ThoughtDisplay: React.FC<ThoughtDisplayProps> = ({
         </div>
 
         {/* Mobile-Optimized Activity Indicator */}
-        <div className={`flex justify-center items-center space-x-2 sm:space-x-4 text-purple-400 text-xs sm:text-sm ${isPaused ? 'opacity-30' : ''}`}>
+        <div aria-hidden="true" className={`flex justify-center items-center space-x-2 sm:space-x-4 text-purple-400 text-xs sm:text-sm ${isPaused ? 'opacity-30' : ''}`}>
           <div className="flex space-x-1">
             <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-400 rounded-full ${isPaused ? '' : 'animate-bounce'}`} style={{ animationDelay: '0s' }}></div>
             <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-400 rounded-full ${isPaused ? '' : 'animate-bounce'}`} style={{ animationDelay: '0.1s' }}></div>
