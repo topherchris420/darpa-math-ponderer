@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Brain, FileText, Home, Infinity, Network } from 'lucide-react';
+import { Brain, FileText, Home, Infinity as InfinityIcon, Network } from 'lucide-react';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 
 interface AppShellProps {
@@ -11,7 +11,7 @@ interface AppShellProps {
 const navItems = [
   { to: '/', label: 'Home', icon: Home },
   { to: '/collaborator', label: 'Workspace', icon: Network },
-  { to: '/infinity', label: 'Think', icon: Infinity },
+  { to: '/infinity', label: 'Think', icon: InfinityIcon },
 ];
 
 export const AppShell: React.FC<AppShellProps> = ({ children, eyebrow = 'Conjecture workspace' }) => {

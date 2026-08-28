@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Brain, Sparkles, Infinity, Square, Circle, Triangle } from 'lucide-react';
+import { Brain, Sparkles, Infinity as InfinityIcon, Square, Circle, Triangle } from 'lucide-react';
 import { Icon3D } from '../ui/icon-3d';
 
 interface InfluenceNode {
@@ -68,7 +68,7 @@ export const ThoughtInfluenceSystem: React.FC<ThoughtInfluenceSystemProps> = ({
   const getConceptIcon = (concept: string) => {
     switch (concept) {
       case 'boundary': return Square;
-      case 'infinity': return Infinity;
+      case 'infinity': return InfinityIcon;
       case 'structure': return Triangle;
       case 'void': return Circle;
       case 'recursion': return Sparkles;

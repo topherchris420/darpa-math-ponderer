@@ -53,7 +53,7 @@ export const ConjectureCard: React.FC<ConjectureCardProps> = ({
           : 'border-white/10 hover:border-white/20'
       }`}
     >
-      <button type="button" onClick={onSelect} className="block w-full text-left focus:outline-none">
+      <button type="button" onClick={onSelect} className="block w-full rounded-sm text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <span className="text-xs font-mono uppercase tracking-[0.2em] text-cyan-400 bg-cyan-950/40 border border-cyan-800/30 px-2 py-0.5 rounded">
