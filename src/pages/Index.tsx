@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Brain, CheckCircle2, FileText, FlaskConical, Infinity, Network, Search, Terminal } from 'lucide-react';
+import { ArrowRight, Brain, CheckCircle2, FileText, FlaskConical, Infinity as InfinityIcon, Network, Search, Terminal } from 'lucide-react';
 import { AppShell } from '@/components/AppShell';
 import { Reveal } from '@/components/Reveal';
 import { Badge } from '@/components/ui/badge';
@@ -71,7 +71,7 @@ const Index = () => {
 
         <div className="relative z-10 flex flex-col justify-center animate-fade-in-up">
           <Badge className="w-fit border border-cyan-300/30 bg-cyan-300/10 text-cyan-100 hover:bg-cyan-300/10 font-mono tracking-wider">
-            <Infinity className="mr-2 h-3.5 w-3.5 text-cyan-300 animate-spin" style={{ animationDuration: '6s' }} />
+            <InfinityIcon className="mr-2 h-3.5 w-3.5 text-cyan-300 animate-spin" style={{ animationDuration: '6s' }} />
             Autonomous math lab active
           </Badge>
           
@@ -120,7 +120,7 @@ const Index = () => {
                 onClick={() => setPrompt(example)}
                 aria-pressed={prompt === example}
                 style={{ animationDelay: `${200 + index * 80}ms` }}
-                className={`min-h-11 flex-shrink-0 snap-start rounded-md border px-3.5 py-2 text-left font-mono text-xs transition duration-300 sm:flex-shrink ${
+                className={`min-h-11 flex-shrink-0 snap-start rounded-md border px-3.5 py-2 text-left font-mono text-xs transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:flex-shrink ${
                   prompt === example
                     ? 'border-cyan-300/50 bg-cyan-300/10 text-white'
                     : 'border-white/5 bg-white/[0.02] text-slate-400 hover:border-cyan-300/30 hover:bg-white/[0.05] hover:text-white'

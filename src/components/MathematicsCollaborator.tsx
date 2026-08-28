@@ -253,7 +253,7 @@ export const MathematicsCollaborator: React.FC = () => {
                     key={prompt}
                     type="button"
                     onClick={() => generateConjecture(prompt)}
-                    className="w-full rounded-md border border-white/5 bg-black/30 p-3 text-left text-xs leading-relaxed text-slate-350 transition duration-300 hover:border-cyan-300/30 hover:bg-black/50 hover:text-white font-mono"
+                    className="w-full rounded-md border border-white/5 bg-black/30 p-3 text-left text-xs leading-relaxed text-slate-350 transition duration-300 hover:border-cyan-300/30 hover:bg-black/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 font-mono"
                     disabled={isGenerating}
                   >
                     {prompt}
@@ -327,7 +327,7 @@ export const MathematicsCollaborator: React.FC = () => {
                       key={conjecture.id}
                       type="button"
                       onClick={() => setSelectedConjectureId(conjecture.id)}
-                      className={`w-full rounded-md border p-3 text-left transition duration-300 ${
+                      className={`w-full rounded-md border p-3 text-left transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${
                         selectedConjecture?.id === conjecture.id
                           ? 'border-cyan-300/60 bg-cyan-300/10 shadow-[0_0_10px_rgba(34,211,238,0.05)]'
                           : 'border-white/5 bg-black/20 hover:border-white/20'
