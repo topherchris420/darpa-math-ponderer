@@ -228,6 +228,7 @@ export const MathematicsCollaborator: React.FC = () => {
                   className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white transition duration-300" 
                   onClick={saveRun}
                   disabled={isGenerating || !selectedConjecture}
+                  title={!selectedConjecture ? "Generate a conjecture first to save" : "Save to research log"}
                 >
                   <Save className="mr-2 h-4 w-4 text-lime-300" />
                   {saveState}
@@ -238,6 +239,7 @@ export const MathematicsCollaborator: React.FC = () => {
                   className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white transition duration-300" 
                   onClick={copyMarkdown}
                   disabled={isGenerating || !selectedConjecture}
+                  title={!selectedConjecture ? "Generate a conjecture first to copy" : "Copy as Markdown"}
                 >
                   <Clipboard className="mr-2 h-4 w-4 text-cyan-300" />
                   {copyState}
