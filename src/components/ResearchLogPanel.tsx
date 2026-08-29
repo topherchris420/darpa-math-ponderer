@@ -24,6 +24,7 @@ export const ResearchLogPanel: React.FC<ResearchLogPanelProps> = ({ entries, onC
           onClick={onClear}
           disabled={entries.length === 0}
           aria-label="Clear research log"
+          title={entries.length === 0 ? "Research log is already empty" : "Clear research log"}
         >
           <Trash2 className="h-4 w-4" />
         </Button>
