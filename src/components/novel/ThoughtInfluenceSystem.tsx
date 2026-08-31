@@ -89,7 +89,7 @@ export const ThoughtInfluenceSystem: React.FC<ThoughtInfluenceSystemProps> = ({
           aria-label={isExpanded ? 'Collapse thought influence field' : 'Expand thought influence field'}
           title={isExpanded ? 'Collapse thought influence field' : 'Expand thought influence field'}
           onClick={() => setIsExpanded(!isExpanded)}
-          className="absolute top-2 right-2 w-8 h-8 bg-purple-600 hover:bg-purple-500 rounded-full flex items-center justify-center transition-colors"
+          className="absolute top-2 right-2 w-8 h-8 bg-purple-600 hover:bg-purple-500 rounded-full flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
         >
           <Icon3D icon={Brain} variant="glow" size={16} className="text-white" />
         </button>
